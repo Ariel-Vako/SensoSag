@@ -19,10 +19,10 @@ import numpy as np
 # load Imp011512.csv -ascii
 datosabc = pd.read_csv('/home/arielmardones/Documentos/Información Inicial - Guillermo/Senso SAG/Matlab SensoSag/MLP001/2018ago1.csv', names=['tiempo', 'accelx', 'accely', 'accelz'], sep=';')
 
-tiempo = datosabc['tiempo']
-accelx = datosabc['accelx']
-accely = datosabc['accely']
-accelz = datosabc['accelz']
+tiempo = datosabc['tiempo'].values
+accelx = datosabc['accelx'].values
+accely = datosabc['accely'].values
+accelz = datosabc['accelz'].values
 
 # Inicialización de variables
 contador = 1
@@ -41,7 +41,7 @@ aux_ciclo = ciclo[1::]
 datosporciclo = np.append(aux_ciclo, [n]) - ciclo
 
 # Identifica los ciclos que están completos con todos los datos
-ciclocompleto = np.array([1 if dato > 500 else 0 for dato in datosporciclo])
+ciclocompleto = np.array([1 if dato > 500 else 0 for dato in datosporciclo], dtype=int)
 
 # Preallocation of growing variables
 # Reinitiallizing others
@@ -67,43 +67,35 @@ angxyz3 = np.empty(n, dtype=float)
 
 for i in np.arange(n):
     if ciclocompleto[i] == 1:
-        t = tiempo[ciclo[i], ciclo[i + 1]]
-        x = accelx[ciclo[i], ciclo[i + 1]]
-        y = accely[ciclo[i], ciclo[i + 1]]
-        z = accelz[ciclo[i], ciclo[i + 1]]
+        t = tiempo[ciclo[i]: ciclo[i + 1]]
+        x = accelx[ciclo[i]: ciclo[i + 1]]
+        y = accely[ciclo[i]: ciclo[i + 1]]
+        z = accelz[ciclo[i]: ciclo[i + 1]]
 
         # Filtro EJE Z Centrado Promedio 19 datos ==> EJE Z
-        zfilt = zeros(concat([1, length(z)]))
-        # ssmlp003.m:136
-        for j in arange(10, length(z) - 9).reshape(-1):
-            zfilt[j] = (z(j - 9) + z(j - 8) + z(j - 7) + z(j - 6) + z(j - 5) + z(j - 4) + z(j - 3) + z(j - 2) + z(j - 1) + z(j) + z(j + 1) + z(j + 2) + z(j + 3) + z(j + 4) + z(j + 5) + z(j + 6) + z(j + 7) + z(j + 8) + z(j + 9)) / 19
-        # ssmlp003.m:138
-        zfilt[arange(1, 9)] = dot(zfilt(10), ones(concat([1, 9])))
-        # ssmlp003.m:140
-        zfilt[arange(length(z) - 9, length(z))] = dot(zfilt(length(z) - 10), ones(concat([1, 10])))
-        # ssmlp003.m:141
-        zfilt2 = zeros(concat([1, length(z)]))
-        # ssmlp003.m:144
-        for j in arange(10, length(z) - 9).reshape(-1):
-            zfilt2[j] = (zfilt(j - 9) + zfilt(j - 8) + zfilt(j - 7) + zfilt(j - 6) + zfilt(j - 5) + zfilt(j - 4) + zfilt(j - 3) + zfilt(j - 2) + zfilt(j - 1) + zfilt(j) + zfilt(j + 1) + zfilt(j + 2) + zfilt(j + 3) + zfilt(j + 4) + zfilt(j + 5) + zfilt(j + 6) + zfilt(j + 7) + zfilt(j + 8) + zfilt(
-                j + 9)) / 19
-        # ssmlp003.m:146
-        zfilt2[arange(1, 9)] = dot(zfilt(10), ones(concat([1, 9])))
-        # ssmlp003.m:148
-        zfilt2[arange(length(z) - 9, length(z))] = dot(zfilt(length(z) - 10), ones(concat([1, 10])))
+        zfilt = np.zeros(len(z))
+        for j in np.arange(10, len(z) - 9):
+            zfilt[j] = np.average(z[j - 9:j + 9 + 1])
 
-        ## Busca cruce ascendente de zfilt2 por un nivel determinado
+        zfilt[0: 10] = zfilt[10]
+        zfilt[len(z) - 9: len(z) + 1] = zfilt[len(z) - 10]
+
+        zfilt2 = np.zeros(len(z))
+        for j in np.arange(10, len(z) - 9):
+            zfilt2[j] = np.average(zfilt[j - 9:j + 9])
+
+        zfilt2[0: 10] = zfilt2[10]
+        zfilt2[len(z) - 9: len(z) + 1] = zfilt2[len(z) - 10]
+
+        # Busca cruce ascendente de zfilt2 por un nivel determinado
         # Permite identificar "cruces por cero" ==> periodo, frec, cero.
         nivelcruce = - 0.5
-        # ssmlp003.m:163
-        detectmax = zeros(1, length(zfilt2))
-        # ssmlp003.m:164
-        for j in arange(1, length(zfilt2) - 1).reshape(-1):
-            if zfilt2(j + 1) > nivelcruce and zfilt2(j) < nivelcruce:
+        detectmax = np.zeros(len(zfilt2))
+        for j in np.arange(len(zfilt2)): #  todo: Verificar mañana. Simplificar
+            if zfilt2[j] < nivelcruce < zfilt2[j + 1]:
                 detectmax[j] = 1
-        # ssmlp003.m:167
-        #         plot(t,z,t,zfilt2,t,detectmax)
-        ## Detecta donde cruce por cero es 1.
+
+        # Detecta donde cruce por cero es 1.
         cxcascindex = find(detectmax)
         # ssmlp003.m:174
         deltaasc = max(cxcascindex) - min(cxcascindex)
