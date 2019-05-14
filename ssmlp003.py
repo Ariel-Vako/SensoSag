@@ -46,11 +46,19 @@ ciclocompleto = np.array([1 if dato > 500 else 0 for dato in datosporciclo])
 # Preallocation of growing variables
 # Reinitiallizing others
 t = 0
-maxdeltaz = np.empty(n, dtype=int)
-maxxy = np.empty(n, dtype=int)
-maxyz = np.empty(n, dtype=int)
-maxzx = np.empty(n, dtype=int)
-maxxyz = np.empty(n, dtype=int)
+ejetiempo = np.empty(n, dtype=float)
+angx1 = np.empty(n, dtype=float)
+angx2 = np.empty(n, dtype=float)
+angx3 = np.empty(n, dtype=float)
+angy1 = np.empty(n, dtype=float)
+angy2 = np.empty(n, dtype=float)
+angy3 = np.empty(n, dtype=float)
+angz1 = np.empty(n, dtype=float)
+angz2 = np.empty(n, dtype=float)
+angz3 = np.empty(n, dtype=float)
+angxyz1 = np.empty(n, dtype=float)
+angxyz2 = np.empty(n, dtype=float)
+angxyz3 = np.empty(n, dtype=float)
 
 # Comienza las iteraciones para analizar los ciclos correctos y completos
 ##############################################
