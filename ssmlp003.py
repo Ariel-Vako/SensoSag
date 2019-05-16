@@ -18,7 +18,7 @@ import plotea
 # Copyright 2017-2018 Guillermo Vidal Rudloff.
 
 # load Imp011512.csv -ascii
-datosabc = pd.read_csv('/home/arielmardones/Documentos/Información Inicial - Guillermo/Senso SAG/Matlab SensoSag/MLP001/2018ago1.csv', names=['tiempo', 'accelx', 'accely', 'accelz'], sep=';')
+datosabc = pd.read_csv('/home/arielmardones/Documentos/Información Inicial - Guillermo/Senso SAG/Matlab SensoSag/MLP001/2018ago3.csv', names=['tiempo', 'accelx', 'accely', 'accelz'], sep=';')
 
 tiempo = datosabc['tiempo'].values
 accelx = datosabc['accelx'].values
@@ -240,6 +240,8 @@ for i in np.arange(n):
             # frecfull[i] = frec / 24 / 60
             # ------------------------
             plotea.grafica1(grados, z1, sinz, dia, hora, minutos, segundos, magaccel, accelx2, accely2, accelz2, frec / 24 / 60, i)
+            plotea.grafica2(t, x, y, z, zfilt2, cxcascindex, n, grados, x1, sinx, z1, sinz)
+            plotea.grafica3(grados, accelz2)
 
             # Cálculo de "Centroide" Angular...
             # No se utilizan en plotea -- Ariel_190516
