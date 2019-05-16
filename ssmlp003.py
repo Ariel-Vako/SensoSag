@@ -101,8 +101,8 @@ for i in np.arange(n):
         if len(cxcascindex) == 0:
             deltaasc = 0
         elif len(cxcascindex) == 3:  # TODO: PENDIENTES DEL MISMO SIGNO?
-            usoa = cxcascindex[2] - cxcascindex[1]
-            usob = cxcascindex[3] - cxcascindex[2]
+            usoa = cxcascindex[1] - cxcascindex[0]
+            usob = cxcascindex[2] - cxcascindex[1]
             # usoc = cxcascindex[3] - cxcascindex[1]
             if 250 < usoa < 350:
                 cxcascindex = np.array([cxcascindex[1], cxcascindex[2]])
@@ -138,17 +138,16 @@ for i in np.arange(n):
 
             maxzf2 = np.max(zfilt2[np.int(ceroizq): np.int(ceroizq) + 150 + 1])
 
-            ejex = np.zeros(np.round(periodo).__int__(), dtype=int)
-            sinzz = np.empty(len(ejex), dtype=float)
+            ejex = np.zeros(np.round(periodo).astype(int), dtype=int)
+            sinzz = np.zeros(len(ejex), dtype=float)
             for j in np.arange(len(ejex)):
                 ejex[j] = ceroizq + (j - 1)
                 sinzz[j] = 1 * np.sin(omega * (ejex[j] - ejex[0])) - (1.0 - maxzf2)
 
             # busca cruce por nivel del sinzz
-            detectcru = np.zeros(len(sinzz), dtype=int)
             cxccru = np.zeros(1, dtype=int)
             flag = False
-            for j in np.arange(len(sinzz) - 1):
+            for j in np.arange(len(ejex) - 1):
                 if sinzz[j] < nivelcruce < sinzz[j + 1]:
                     if len(cxccru) == 1 and not flag:
                         cxccru[0] = j
@@ -157,7 +156,7 @@ for i in np.arange(n):
                         np.append(cxccru, [j])
 
             # busca linealiza el cruce exacto por nivelcruce
-            if np.max(detectcru) == 0:
+            if np.max(cxccru) == 0:
                 cxccru_min = 100
                 usar = 0  # TODO: SALIR DEL CICLO FOR?
 
@@ -182,10 +181,10 @@ for i in np.arange(n):
             # Luego decide si usar ascendente o descendente
             #  y plotea el eje X ajustado entre los dos cruces por cero
             if usar == 1:
-                t1 = t[np.min(ejex2).__int__(): np.max(ejex2).__int__() + 1]
-                x1 = x[np.min(ejex2).__int__(): np.max(ejex2).__int__() + 1]
-                y1 = y[np.min(ejex2).__int__(): np.max(ejex2).__int__() + 1]
-                z1 = z[np.min(ejex2).__int__(): np.max(ejex2).__int__() + 1]
+                t1 = t[np.min(ejex2).astype(int): np.max(ejex2).astype(int) + 1]
+                x1 = x[np.min(ejex2).astype(int): np.max(ejex2).astype(int) + 1]
+                y1 = y[np.min(ejex2).astype(int): np.max(ejex2).astype(int) + 1]
+                z1 = z[np.min(ejex2).astype(int): np.max(ejex2).astype(int) + 1]
 
             # Calcula t=0 (tinicial) y t=360 tfinal para periodo y frec.
             pendt1 = (t1[1] - t1[0]) / (angeje3[1] - angeje3[0])
@@ -240,13 +239,12 @@ for i in np.arange(n):
 
             # frecfull[i] = frec / 24 / 60
             # ------------------------
-            # plotea
+            plotea.grafica1(grados, z1, sinz, dia, hora, minutos, segundos, magaccel, accelx2, accely2, accelz2, frec / 24 / 60, i)
 
             # Cálculo de "Centroide" Angular...
-
-            newgrad = (grados - np.pi / 2) / np.pi * 180
-            angz2[i] = sum(newgrad * absaccz ** 2) / sum(absaccz ** 2)
-            title(concat(['Ang Z2: ', num2str(angz2(i))]))
+            # No se utilizan en plotea -- Ariel_190516
+            # newgrad = (grados - np.pi / 2) / np.pi * 180
+            # angz2[i] = sum(newgrad * absaccz ** 2) / sum(absaccz ** 2)
 
             # PAUSE PARA ANALIZAR CASO A CASO
             if usar != 0 and ciclocompleto[i] != 0:
