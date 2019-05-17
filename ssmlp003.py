@@ -26,7 +26,6 @@ accely = datosabc['accely'].values
 accelz = datosabc['accelz'].values
 
 # Inicialización de variables
-contador = 1
 usar = 0
 n = len(tiempo)
 ciclo = np.array([0])
@@ -34,7 +33,6 @@ ciclo = np.array([0])
 # Identifica los ciclos que existen
 for i in np.arange(n - 1):
     if (tiempo[i + 1] - tiempo[i]) > 0.1 / 60 / 60 / 24:
-        contador = contador + 1
         ciclo = np.append(ciclo, [i + 1])
 
 # Calcula los datos que tiene cada ciclo
@@ -66,7 +64,7 @@ angxyz3 = np.empty(n, dtype=float)
 # ACA VOY if usar==0 ==> Goto next loop!!
 #############################################
 
-for i in np.arange(n):
+for i in np.arange(len(ciclo)):
     if ciclocompleto[i] == 1:
         t = tiempo[ciclo[i]: ciclo[i + 1]]
         x = accelx[ciclo[i]: ciclo[i + 1]]
@@ -100,7 +98,7 @@ for i in np.arange(n):
         cxcascindex = np.asarray(np.where(detectmax == 1)[0], dtype=int)
         if len(cxcascindex) == 0:
             deltaasc = 0
-        elif len(cxcascindex) == 3:  # TODO: PENDIENTES DEL MISMO SIGNO?
+        elif len(cxcascindex) == 3:
             usoa = cxcascindex[1] - cxcascindex[0]
             usob = cxcascindex[2] - cxcascindex[1]
             # usoc = cxcascindex[3] - cxcascindex[1]
@@ -158,7 +156,7 @@ for i in np.arange(n):
             # busca linealiza el cruce exacto por nivelcruce
             if np.max(cxccru) == 0:
                 cxccru_min = 100
-                usar = 0  # TODO: SALIR DEL CICLO FOR?
+                usar = 0
 
             cxccru_min = np.min(cxccru)
             pendizq = sinzz[cxccru_min + 1] - sinzz[cxccru_min]
@@ -214,7 +212,6 @@ for i in np.arange(n):
             # Crea una señal sinusoidal de amplitud 1 (2 peak - peak)
             # en fase con la detección de los máximos
             # Corrige nivel para quedar en línea con z1filt.
-            # OLD sinz=usar*1*sin(omega*(t1-min(t1)))+mean(z1filt);
             sinz = np.sin(omega * (t1 - np.min(t1)) + angfftz[2] + np.pi / 2 - ajustesinz) - (1 - maxzf2)
             accelx2 = x1 - sinx
             accely2 = y1 - siny
@@ -231,10 +228,10 @@ for i in np.arange(n):
 
             # accelxyz[i, np.arange(len(t1) - 1)] = np.sqrt(accelx2 ** 2 + accely2 ** 2 + accelz2 ** 2)
             magaccel = np.sqrt(accelx2 ** 2 + accely2 ** 2 + accelz2 ** 2)
-            fecha = np.min(t1)
-            dia = np.floor(fecha)
-            hora = np.floor((fecha - dia) * 24)
-            minutos = np.floor(fecha - dia - hora / 24 * 24 * 60)
+            fecha = np.min(t1).astype(int)
+            dia = np.floor(fecha).astype(int)
+            hora = np.floor((fecha - dia) * 24).astype(int)
+            minutos = np.floor(fecha - dia - hora / 24 * 24 * 60).astype(int)
             segundos = np.floor((fecha - dia - hora / 24 - minutos / 24 / 60) * 24 * 60 * 60)
 
             # frecfull[i] = frec / 24 / 60

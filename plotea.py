@@ -35,21 +35,28 @@ def grafica1(grados, z1, sinz, dia, hora, minutos, segundos, magaccel, accelx2, 
     ax3 = plt.subplot(233, projection='polar')
     ax3.plot(grados - np.pi / 2, 20 - magaccel)
     ax3.set(title=f"Ciclo : {i}")
+    ax3.set_theta_zero_location("N")
 
     # Subplot 4: Polar
     ax4 = plt.subplot(234, projection='polar')
     ax4.plot(grados - np.pi / 2, 20 - accelx2)
     ax4.set(title='Acel Eje X')
+    ax4.set_theta_zero_location("N")
+    ax4.set_ylim(0, 50)
 
     # Subplot 5: Polar
     ax5 = plt.subplot(235, projection='polar')
     ax5.plot(grados - np.pi / 2, 20 - accely2)
     ax5.set(title='Acel Eje Y')
+    ax5.set_theta_zero_location("N")
+    ax5.set_ylim(0, 50)
 
     # Subplot 6: Polar
     ax6 = plt.subplot(236, projection='polar')
     ax6.plot(grados - np.pi / 2, 20 - accelz2)
     ax6.set(title='Acel Eje Z')
+    ax6.set_theta_zero_location("N")
+    ax6.set_ylim(0, 50)
 
     return
 
