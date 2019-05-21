@@ -11,9 +11,20 @@ __email__ = 'amardones@highservice.cl'
 
 __source__ = 'http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/'
 
-# data  # Resultado de la query transformada de unicode
+import numpy as np
+import pywt
+
+data  # Resultado de la query transformada de unicode
+
+tiempo = data['tiempo']
 
 # Segmentación de señal por intervalos de tiempo coherentes entre ellos
 # Código guillermo
 
-#
+n = len(tiempo)
+ciclo = np.array([0])
+
+for i in np.arange(n - 1):
+    if (tiempo[i + 1] - tiempo[i]) > 0.1 / 60 / 60 / 24:
+        ciclo = np.append(ciclo, [i + 1])
+
