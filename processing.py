@@ -11,7 +11,7 @@ __email__ = 'amardones@highservice.cl'
 
 __source__ = 'http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/'
 
-data  # Resultado de la query transformada de unicode
+# data  # Resultado de la query transformada de unicode
 
 # Segmentación de señal por intervalos de tiempo coherentes entre ellos
 # Código guillermo
