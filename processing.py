@@ -15,6 +15,8 @@ import numpy as np
 import pywt
 import matplotlib.pyplot as plt
 
+def get_data()
+
 
 def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     thresh = thresh * np.nanmax(signal)
@@ -25,6 +27,7 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
 
 
 def grafica(signal, ciclo, reconstructed_signal):
+    plt.close('all')
     fig, ax = plt.subplots(figsize=(12, 8))
     ax.plot(signal, color="b", alpha=0.5, label='original signal')
     rec = reconstructed_signal
@@ -34,24 +37,35 @@ def grafica(signal, ciclo, reconstructed_signal):
     ax.set_ylabel('Signal Amplitude', fontsize=16)
     ax.set_xlabel(f'Cicle {ciclo}', fontsize=16)
     plt.show()
-    return
+    return fig
+
+
+def fundamental(reconstructed_signal):
+    return coseno
 
 
 data  # Resultado de la query transformada de unicode
 
-tiempo = data['tiempo']
+tiempo = data['tiempo'].values
+accelz = data['accelz'].values
 
 # Segmentación de señal por intervalos de tiempo coherentes entre ellos
 # Código guillermo
 
 n = len(tiempo)
 ciclo = np.array([0])
-contador_ciclo = 0
+contador_ciclo = 1
 
 for i in np.arange(n - 1):
     if (tiempo[i + 1] - tiempo[i]) > 0.1 / 60 / 60 / 24:
         contador_ciclo += 1
         ciclo = np.append(ciclo, [i + 1])
 
-for cicle in range(len(ciclo)):
-    rec = lowpassfilter(signal, 0.4)
+cont = 0
+while cont <= len(contador_ciclo) and (tecla == ''):
+    signal = accelz[cont]
+    rec = lowpassfilter(signal, 0.4)  # TODO: SE NECESITA REPROGRAMAR LA FUNCIÓN EN 2D PARA CONSIDERAR EL EJE TIEMPO.
+    grafica(signal, cont, rec)  # TODO: SE NECESITA REPROGRAMAR LA FUNCIÓN EN 2D PARA CONSIDERAR EL EJE TIEMPO.
+
+    cont += 1
+    tecla = input()
