@@ -14,8 +14,9 @@ __source__ = 'http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-tran
 import numpy as np
 import pywt
 import matplotlib.pyplot as plt
+import  mysql_query as myz
 
-def get_data()
+consulta = myz.consulta_acellz()
 
 
 def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
