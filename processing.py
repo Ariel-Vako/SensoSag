@@ -13,6 +13,7 @@ __source__ = 'http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-tran
 
 import numpy as np
 import pywt
+import matplotlib.pyplot as plt
 
 
 def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
@@ -21,6 +22,19 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     coeff[1:] = (pywt.threshold(i, value=thresh, mode="soft") for i in coeff[1:])
     reconstructed_signal = pywt.waverec(coeff, wavelet, mode="per")
     return reconstructed_signal
+
+
+def grafica(signal, ciclo, reconstructed_signal):
+    fig, ax = plt.subplots(figsize=(12, 8))
+    ax.plot(signal, color="b", alpha=0.5, label='original signal')
+    rec = reconstructed_signal
+    ax.plot(rec, 'k', label='DWT smoothing}', linewidth=2)
+    ax.legend()
+    ax.set_title('Removing High Frequency Noise with DWT', fontsize=18)
+    ax.set_ylabel('Signal Amplitude', fontsize=16)
+    ax.set_xlabel(f'Cicle {ciclo}', fontsize=16)
+    plt.show()
+    return
 
 
 data  # Resultado de la query transformada de unicode
@@ -32,7 +46,12 @@ tiempo = data['tiempo']
 
 n = len(tiempo)
 ciclo = np.array([0])
+contador_ciclo = 0
 
 for i in np.arange(n - 1):
     if (tiempo[i + 1] - tiempo[i]) > 0.1 / 60 / 60 / 24:
+        contador_ciclo += 1
         ciclo = np.append(ciclo, [i + 1])
+
+for cicle in range(len(ciclo)):
+    rec = lowpassfilter(signal, 0.4)
