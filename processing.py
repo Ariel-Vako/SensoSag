@@ -17,6 +17,7 @@ import pywt
 data  # Resultado de la query transformada de unicode
 
 tiempo = data['tiempo']
+accelz = datosabc['accelz']
 
 # Segmentación de señal por intervalos de tiempo coherentes entre ellos
 # Código guillermo
@@ -28,3 +29,9 @@ for i in np.arange(n - 1):
     if (tiempo[i + 1] - tiempo[i]) > 0.1 / 60 / 60 / 24:
         ciclo = np.append(ciclo, [i + 1])
 
+# MRA
+waveletname = 'sym5'
+
+for fila_z in accelz:
+    signal_z = accelz[fila_z]
+    coeffs = pywt.wavedec(signal_z, waveletname, level=7)
