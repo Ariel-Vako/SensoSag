@@ -10,3 +10,5 @@ gen
 .idea/
 ssmlp003.m
 venv/
+/ssmlp003b.m
+__pycache__/
