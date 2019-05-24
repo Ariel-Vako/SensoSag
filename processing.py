@@ -15,6 +15,8 @@ import numpy as np
 import pywt
 import matplotlib.pyplot as plt
 import mysql_query as myz
+import scipy
+import collections
 import params
 
 
@@ -38,13 +40,15 @@ def grafica(signal, ciclo, reconstructed_signal):
     ax.set_xlabel(f'Cicle {ciclo}', fontsize=16)
     plt.show()
     return fig
- 
+
+
 def calculate_entropy(list_values):
-    counter_values = Counter(list_values).most_common()
-    probabilities = [elem[1]/len(list_values) for elem in counter_values]
-    entropy=scipy.stats.entropy(probabilities)
+    counter_values = collections.Counter(list_values).most_common()
+    probabilities = [elem[1] / len(list_values) for elem in counter_values]
+    entropy = scipy.stats.entropy(probabilities)
     return entropy
- 
+
+
 def calculate_statistics(list_values):
     n5 = np.nanpercentile(list_values, 5)
     n25 = np.nanpercentile(list_values, 25)
@@ -54,21 +58,24 @@ def calculate_statistics(list_values):
     mean = np.nanmean(list_values)
     std = np.nanstd(list_values)
     var = np.nanvar(list_values)
-    rms = np.nanmean(np.sqrt(list_values**2))
+    rms = np.nanmean(np.sqrt(list_values ** 2))
     return [n5, n25, n75, n95, median, mean, std, var, rms]
- 
+
+
 def calculate_crossings(list_values):
-    zero_crossing_indices = np.nonzero(np.diff(np.array(list_values) &gt; 0))[0]
+    zero_crossing_indices = np.nonzero(np.diff(np.array(list_values) > 0))[0]
     no_zero_crossings = len(zero_crossing_indices)
-    mean_crossing_indices = np.nonzero(np.diff(np.array(list_values) &gt; np.nanmean(list_values)))[0]
+    mean_crossing_indices = np.nonzero(np.diff(np.array(list_values) > np.nanmean(list_values)))[0]
     no_mean_crossings = len(mean_crossing_indices)
     return [no_zero_crossings, no_mean_crossings]
- 
+
+
 def get_features(list_values):
     entropy = calculate_entropy(list_values)
     crossings = calculate_crossings(list_values)
     statistics = calculate_statistics(list_values)
     return [entropy] + crossings + statistics
+
 
 def get_sensosag_features(ecg_data, ecg_labels, waveletname):
     list_features = []
@@ -82,10 +89,10 @@ def get_sensosag_features(ecg_data, ecg_labels, waveletname):
         list_features.append(features)
     return list_features, list_labels
 
-  
-  
+
 def fundamental(reconstructed_signal):
     return coseno
+
 
 consulta = myz.consulta_acellz(params.startDate, params.endDate, params.cantidad)
 
@@ -93,14 +100,11 @@ data  # Resultado de la query transformada de unicode
 
 #  Split the data between train and test
 data_ecg, labels_ecg = load_ecg_data(filename)
-training_size = int(0.6*len(labels_ecg))
+training_size = int(params.tamaño_entrenamiento * len(labels_ecg))
 train_data_ecg = data_ecg[:training_size]
 test_data_ecg = data_ecg[training_size:]
 train_labels_ecg = labels_ecg[:training_size]
 test_labels_ecg = labels_ecg[training_size:]
-
-
-
 
 tiempo = data['tiempo'].values
 accelz = data['accelz'].values

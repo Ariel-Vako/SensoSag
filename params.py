@@ -6,3 +6,6 @@ cantidad = 5000
 # Lowpass filter bank parameters
 thresh = 0.4
 wavelet_name = 'sym5'
+
+# Training Size
+tamaño_entrenamiento = 0.7
