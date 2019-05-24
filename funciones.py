@@ -6,7 +6,6 @@ import scipy
 import collections
 
 
-
 def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     thresh = thresh * np.nanmax(signal)
     coeff = pywt.wavedec(signal, wavelet, mode="per")
@@ -77,21 +76,53 @@ def get_sensosag_features(ecg_data, ecg_labels, waveletname):
     return list_features, list_labels
 
 
-def consulta_acellz(startDate, endDate, cantidad=5000):
+def consulta_acellz(start_date, end_date, cantidad=5000):
     db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
     cursor = db.cursor()
-
-    cursor.execute(f"SELECT dataZ , fecha_reg \
-        FROM Data_Sensor \
-        WHERE (id_sensor_data IN (1) AND estado_data = 134217727 \
-        AND (fecha_reg BETWEEN {startDate} AND {endDate}) ) \
-        ORDER BY fecha_reg ASC \
-        LIMIT {cantidad}")
-
+    cursor.execute("SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (1) AND estado_data = 134217727 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s", (start_date, end_date, cantidad))
     results = cursor.fetchall()
     db.close()
     return results
 
 
+def extraer_blob(datos):
+    dates = []
+    speeds = []
+    hist2d = []
+    impacts = []
+    toe = []
+    toe_std = []
+    n = len(datos[0])
+
+    for row in datos:
+        sample = []
+
+        for x in range():
+            sample.append(float((ord(row[0][x * 2]) << 8) + ord(row[0][x * 2 + 1]) - 2 ** 15) / 2 ** 8)
+        # date = row[1]
+        dates.append(row[1])
+
+        ######################################################################
+
+        for i in range(len(sample) - 1):
+            if i == 0:
+                virtual_impacts[i] = np.abs(sample[i])
+            else:
+                virtual_impacts[i] = np.abs(sample[i - 1] - sample[i])
+
+        ##binarize sample to isolate impactless interval
+        impacts_mask = np.where(virtual_impacts > threshold, 0, 1)
+
+        # clip data between 1 [G] and -2 [G] range
+        for i in range(len(sample) - 1):
+            if sample[i] > 1:
+                clipped_data[i] = 0
+            elif sample[i] < -2:
+                clipped_data[i] = -2
+            else:
+                clipped_data[i] = sample[i]
+    return expanded_blob
+
+
 def fundamental(reconstructed_signal):
-    return coseno
+    return  # coseno

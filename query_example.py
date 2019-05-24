@@ -32,3 +32,19 @@ lista_y = []
 
 #    print lista_y
 #   exit()
+import MySQLdb
+
+start_date = '2018-11-26 00:00'
+end_date = '2018-11-26 23:30'
+cantidad = 500
+
+db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
+cursor = db.cursor()
+query = f"SELECT dataZ , fecha_reg FROM Data_Sensor" \
+        f" WHERE id_sensor_data IN (1) AND estado_data = 134217727 AND fecha_reg BETWEEN {start_date} AND {end_date}" \
+        f" ORDER BY fecha_reg ASC" \
+        f" LIMIT {cantidad}"
+cursor.execute(query)
+
+results = cursor.fetchall()
+db.close()
