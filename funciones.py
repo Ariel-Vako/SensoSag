@@ -79,7 +79,9 @@ def get_sensosag_features(ecg_data, ecg_labels, waveletname):
 def consulta_acellz(start_date, end_date, cantidad=5000):
     db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
     cursor = db.cursor()
-    cursor.execute("SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (1) AND estado_data = 134217727 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s", (start_date, end_date, cantidad))
+    cursor.execute(
+        "SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (1) AND estado_data = 134217727 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s",
+        (start_date, end_date, cantidad))
     results = cursor.fetchall()
     db.close()
     return results
