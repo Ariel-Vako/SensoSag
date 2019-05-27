@@ -15,22 +15,23 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     return reconstructed_signal
 
 
-def grafica(signal, ciclo, reconstructed_signal, coseno):
-    plt.close('all')
+def grafica(signal, ciclo, reconstructed_signal, coseno, path):
+    # plt.close('all')
     fig, ax = plt.subplots(figsize=(12, 8))
     plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
     ax.plot(signal, color="b", alpha=0.5, label='original signal')
     rec = reconstructed_signal
     ax.plot(rec, 'k', label='DWT smoothing', linewidth=2)
-    ax.plot(coseno, 'r', label='Coseno fit', linewidth=1, linestyle='--')
+    ax.plot(coseno, 'r', label='Sine fit', linewidth=1, linestyle='--')
     ax.legend()
     ax.set_title(f'Cicle {ciclo + 1}', fontsize=18)
     ax.set_ylabel('Signal Amplitude', fontsize=16)
     ax.set_xlabel('Time', fontsize=16)
     ax.grid(b=True, which='major', color='#666666')
-    ax.grid(b=True, which='minor', color='#999999', alpha=0.2, linestyle='--')
+    ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
     ax.minorticks_on()
-    plt.show()
+    # plt.show()
+    fig.savefig(f'{path}/Ciclo {ciclo}.png')
     return fig
 
 
@@ -106,19 +107,19 @@ def extraer_blob(row):
     return sample, dates
 
 
-def fundamental(t, amplitud, frecuencia, desfase,  desplazamiento_y):
-    return amplitud * np.cos(2 * np.pi * frecuencia * t + desfase) - desplazamiento_y
+def fundamental(t, amplitud, frecuencia, desfase, desplazamiento_y):
+    return amplitud * np.sin(2 * np.pi * frecuencia * t + desfase) - desplazamiento_y
 
 
-def residuos(x, t, rec_signal):
-    return fundamental(t, x) - rec_signal
+def residuos(t, rec_signal, amplitud, frecuencia, desfase, desplazamiento_y):
+    return fundamental(t, amplitud, frecuencia, desfase, desplazamiento_y) - rec_signal
 
 
 def robust_fitting(signal):
     # Opciones optimización robusta:
     # [linear, huber, soft_l1, cauchy, arctan]
-    x0 = [1, 0.5, 1.4, -0.5]
-    t = np.linspace(0, len(signal), 50)
+    x0 = [1, 1 / 270, 1.4, -0.5]
+    t = np.linspace(0, len(signal), 540)
     # res_robust = scipy.optimize.fmin_l_bfgs_b(residuos, x0, bounds=((0.5, 1.5), (0, np.inf), (-4, 4), (-2, 2)), args=(t, signal))
-    popt = scipy.optimize.curve_fit(fundamental, t, signal)
-    return popt
+    popt, pcov = scipy.optimize.curve_fit(fundamental, t, signal, p0=x0, bounds=([-1, 1/290, -6, -1], [1., 1/260, 6, 1]))
+    return popt, pcov

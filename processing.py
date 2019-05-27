@@ -16,25 +16,17 @@ import params
 import funciones as fx
 import numpy as np
 
+# First run
 consulta = fx.consulta_acellz(params.startDate, params.endDate, params.cantidad)
-
-#  Split the data between train and test
-# data_ecg, labels_ecg = load_ecg_data(filename)
-# training_size = int(params.tamaño_entrenamiento * len(labels_ecg))
-# train_data_ecg = data_ecg[:training_size]
-# test_data_ecg = data_ecg[training_size:]
-# train_labels_ecg = labels_ecg[:training_size]
-# test_labels_ecg = labels_ecg[training_size:]
-
-# Segmentación de señal por intervalos de tiempo coherentes entre ellos
 
 cont = 0
 tecla = ''
-while cont <= len(consulta) and (tecla == ''):
+while cont < len(consulta):
     signal, dates = fx.extraer_blob(consulta[cont])
     rec = fx.lowpassfilter(signal, params.thresh, params.wavelet_name)  # TODO: SE NECESITA REPROGRAMAR LA FUNCIÓN EN 2D PARA CONSIDERAR EL EJE TIEMPO.
-    popt = fx.robust_fitting(rec)
-    coseno = fx.fundamental(t, amplitud, frecuencia, desfase,  desplazamiento_y)
-    fx.grafica(signal, cont, rec, coseno)  # TODO: SE NECESITA REPROGRAMAR LA FUNCIÓN EN 2D PARA CONSIDERAR EL EJE TIEMPO.
+    popt, pcov = fx.robust_fitting(rec)
+    amplitud, frecuencia, desfase, desplazamiento_y = popt[0], popt[1], popt[2], popt[3]
+    sine = fx.fundamental(np.linspace(0, len(signal), 540), amplitud, frecuencia, desfase, desplazamiento_y)
+    fx.grafica(signal, cont, rec, sine, params.pwd)  # TODO: SE NECESITA REPROGRAMAR LA FUNCIÓN EN 2D PARA CONSIDERAR EL EJE TIEMPO.
     cont += 1
-    tecla = input()
+
