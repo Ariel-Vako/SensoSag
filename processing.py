@@ -23,10 +23,10 @@ cont = 0
 tecla = ''
 while cont < len(consulta):
     signal, dates = fx.extraer_blob(consulta[cont])
-    rec = fx.lowpassfilter(signal, params.thresh, params.wavelet_name)  # TODO: SE NECESITA REPROGRAMAR LA FUNCIÓN EN 2D PARA CONSIDERAR EL EJE TIEMPO.
+    rec = fx.lowpassfilter(signal, params.thresh, params.wavelet_name)
     popt, pcov = fx.robust_fitting(rec)
     amplitud, frecuencia, desfase, desplazamiento_y = popt[0], popt[1], popt[2], popt[3]
     sine = fx.fundamental(np.linspace(0, len(signal), 540), amplitud, frecuencia, desfase, desplazamiento_y)
-    fx.grafica(signal, cont, rec, sine, params.pwd)  # TODO: SE NECESITA REPROGRAMAR LA FUNCIÓN EN 2D PARA CONSIDERAR EL EJE TIEMPO.
+    fx.grafica(signal, cont, rec, sine, params.pwd)
     cont += 1
 
