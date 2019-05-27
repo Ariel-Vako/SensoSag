@@ -1,7 +1,7 @@
 # query parameters
 startDate = '2018-11-26 00:00'
 endDate = '2018-12-29 23:30'
-cantidad = 100
+cantidad = 200
 
 # Lowpass filter bank parameters
 thresh = 0.3

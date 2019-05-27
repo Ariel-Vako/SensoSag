@@ -12,7 +12,7 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     coeff = pywt.wavedec(signal, wavelet, mode="per")
     coeff[1:] = (pywt.threshold(i, value=thresh, mode="soft") for i in coeff[1:])
     reconstructed_signal = pywt.waverec(coeff, wavelet, mode="per")
-    return reconstructed_signal
+    return reconstructed_signal, coeff
 
 
 def grafica(signal, ciclo, reconstructed_signal, coseno, path):

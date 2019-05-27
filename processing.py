@@ -22,11 +22,15 @@ consulta = fx.consulta_acellz(params.startDate, params.endDate, params.cantidad)
 cont = 0
 tecla = ''
 while cont < len(consulta):
+    features = []
     signal, dates = fx.extraer_blob(consulta[cont])
-    rec = fx.lowpassfilter(signal, params.thresh, params.wavelet_name)
+    rec, list_coeff = fx.lowpassfilter(signal, params.thresh, params.wavelet_name)
     popt, pcov = fx.robust_fitting(rec)
     amplitud, frecuencia, desfase, desplazamiento_y = popt[0], popt[1], popt[2], popt[3]
     sine = fx.fundamental(np.linspace(0, len(signal), 540), amplitud, frecuencia, desfase, desplazamiento_y)
     fx.grafica(signal, cont, rec, sine, params.pwd)
-    cont += 1
+    for coeff in list_coeff:
+        features += fx.get_features(coeff)
 
+
+    cont += 1
