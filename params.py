@@ -10,5 +10,8 @@ wavelet_name = 'sym5'
 # Training Size
 tamaño_entrenamiento = 0.7
 
-# Directorio Imágnees
+# Directorio Imágenes
 pwd = '/home/arielmardones/PycharmProjects/Matlab2Python/Imágenes'
+
+# Número de grupos
+no_cluster = 4

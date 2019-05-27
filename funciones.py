@@ -16,7 +16,7 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
 
 
 def grafica(signal, ciclo, reconstructed_signal, coseno, path):
-    # plt.close('all')
+    plt.close('all')
     fig, ax = plt.subplots(figsize=(12, 8))
     plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
     ax.plot(signal, color="b", alpha=0.5, label='original signal')
@@ -120,6 +120,5 @@ def robust_fitting(signal):
     # [linear, huber, soft_l1, cauchy, arctan]
     x0 = [1, 1 / 270, 1.4, -0.5]
     t = np.linspace(0, len(signal), 540)
-    # res_robust = scipy.optimize.fmin_l_bfgs_b(residuos, x0, bounds=((0.5, 1.5), (0, np.inf), (-4, 4), (-2, 2)), args=(t, signal))
-    popt, pcov = scipy.optimize.curve_fit(fundamental, t, signal, p0=x0, bounds=([-1, 1/290, -6, -1], [1., 1/260, 6, 1]))
+    popt, pcov = scipy.optimize.curve_fit(fundamental, t, signal, p0=x0, bounds=([-1, 1 / 290, -6, -1], [1., 1 / 260, 6, 1]))
     return popt, pcov
