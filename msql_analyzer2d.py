@@ -12,33 +12,33 @@ from dateutil import parser
 # startDate = "2018-08-01 00:00"
 # endDate = "2018-08-30 00:00"
 
-# CONFIG###################
-toe_window_min = 90
-toe_window_max = 180
-packet_len = 520
-# For dates
-
-# Get the filter coefficients so we can check its frequency response.
-b, a = signal.butter(3, 0.048)
-# create timeframe for all samples
-t = np.linspace(0, (packet_len - 1) * 0.02, packet_len)
-# create auxiliary objects
-clipped_data = np.zeros(packet_len)
-virtual_impacts = np.zeros(packet_len)
-impacts_mask = np.zeros(packet_len)
-
-# impact threshold
-threshold = 1
-
-# functions
-# fitfunc = lambda p, x: p[0]*np.cos(2*np.pi*p[1]*x+p[2]) + p[3]
-fitfunc = lambda p, x: np.cos(2 * np.pi * p[1] * x + p[2]) + p[3]
-errfunc = lambda p, x, y: fitfunc(p, x) - y
-anglefunc = lambda p, x: (2 * np.pi * p[1] * x + p[2])  # Radians
-degfunc = lambda p, x: map(math.degrees, np.mod((2 * np.pi * p[1] * x + p[2]), 2 * np.pi))  # degrees
-
 
 def process(signal):
+    # CONFIG###################
+    toe_window_min = 90
+    toe_window_max = 180
+    packet_len = 520
+    # For dates
+
+    # Get the filter coefficients so we can check its frequency response.
+    b, a = signal.butter(3, 0.048)
+    # create timeframe for all samples
+    t = np.linspace(0, (packet_len - 1) * 0.02, packet_len)
+    # create auxiliary objects
+    clipped_data = np.zeros(packet_len)
+    virtual_impacts = np.zeros(packet_len)
+    impacts_mask = np.zeros(packet_len)
+
+    # impact threshold
+    threshold = 1
+
+    # functions
+    # fitfunc = lambda p, x: p[0]*np.cos(2*np.pi*p[1]*x+p[2]) + p[3]
+    fitfunc = lambda p, x: np.cos(2 * np.pi * p[1] * x + p[2]) + p[3]
+    errfunc = lambda p, x, y: fitfunc(p, x) - y
+    anglefunc = lambda p, x: (2 * np.pi * p[1] * x + p[2])  # Radians
+    degfunc = lambda p, x: map(math.degrees, np.mod((2 * np.pi * p[1] * x + p[2]), 2 * np.pi))  # degrees
+
     sample = signal
     dates = []
     speeds = []
