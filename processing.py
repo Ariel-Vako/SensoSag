@@ -10,7 +10,8 @@ __date__ = '2019-05-21'
 __email__ = 'amardones@highservice.cl'
 
 __source__ = 'http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/' \
-             'https://scipy-cookbook.readthedocs.io/items/robust_regression.html'
+             'https://scipy-cookbook.readthedocs.io/items/robust_regression.html' \
+             'https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering'
 
 import params
 import funciones as fx

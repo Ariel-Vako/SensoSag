@@ -1,3 +1,5 @@
+import os
+
 # query parameters
 startDate = '2018-11-26 00:00'
 endDate = '2018-12-29 23:30'
@@ -11,7 +13,10 @@ wavelet_name = 'sym5'
 tamaño_entrenamiento = 0.7
 
 # Directorio Imágenes
-pwd = '/home/arielmardones/PycharmProjects/Matlab2Python/Imágenes'
+# user = getpass.getuser()
+ruta = os.path.dirname(os.path.realpath(__file__))
+'kostya'
+pwd = ruta + '/Imágenes'
 
 # Número de grupos
-no_cluster = 4
+no_cluster = 7
