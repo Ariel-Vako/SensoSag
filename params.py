@@ -15,7 +15,6 @@ tamaño_entrenamiento = 0.7
 # Directorio Imágenes
 # user = getpass.getuser()
 ruta = os.path.dirname(os.path.realpath(__file__))
-'kostya'
 pwd = ruta + '/Imágenes'
 
 # Número de grupos

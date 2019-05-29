@@ -164,17 +164,17 @@ def process(results):
 
 
 # Open database connection
-db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
-cursor = db.cursor()
-
-cursor.execute("SELECT dataZ , fecha_reg \
-	FROM Data_Sensor \
-	WHERE (id_sensor_data IN (3) AND estado_data = 134217726 \
-	AND (fecha_reg BETWEEN %s AND %s) ) \
-	ORDER BY fecha_reg ASC \
-	LIMIT 5000", (startDate, endDate))
-
-results = cursor.fetchall()
+# db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
+# cursor = db.cursor()
+#
+# cursor.execute("SELECT dataZ , fecha_reg \
+# 	FROM Data_Sensor \
+# 	WHERE (id_sensor_data IN (3) AND estado_data = 134217726 \
+# 	AND (fecha_reg BETWEEN %s AND %s) ) \
+# 	ORDER BY fecha_reg ASC \
+# 	LIMIT 5000", (startDate, endDate))
+#
+# results = cursor.fetchall()
 center_ring = process(results)
 
 # print sample
@@ -185,7 +185,7 @@ center_ring = process(results)
 
 # disconnect from server
 # print dates
-db.close()
+# db.close()
 
 # plt.set_yticklabels(dates)
 # plt.imshow(hist2d, cmap='hot' , interpolation='none', aspect = 'auto', extent=[0,500,4,16])

@@ -16,7 +16,9 @@ __source__ = 'http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-tran
 import params
 import funciones as fx
 import numpy as np
+import my
 import clusters as grp
+
 
 # First run
 consulta = fx.consulta_acellz(params.startDate, params.endDate, params.cantidad)
@@ -31,7 +33,8 @@ while cont < len(consulta):
     popt, pcov = fx.robust_fitting(rec)
     amplitud, frecuencia, desfase, desplazamiento_y = popt[0], popt[1], popt[2], popt[3]
     sine = fx.fundamental(np.linspace(0, len(signal), 540), amplitud, frecuencia, desfase, desplazamiento_y)
-    # fx.grafica(signal, cont, rec, sine, params.pwd)
+    seno_jose = mysq
+    fx.grafica(signal, cont, rec, sine, params.pwd)
     for coeff in list_coeff:
         features += fx.get_features(coeff)
     signal_features.append(features)
