@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 import math
 import MySQLdb
 import struct
@@ -12,43 +10,42 @@ from dateutil import parser
 # startDate = "2018-08-01 00:00"
 # endDate = "2018-08-30 00:00"
 
+# CONFIG###################
+toe_window_min = 90
+toe_window_max = 180
+packet_len = 540
+# For dates
 
-def process(signal):
-    # CONFIG###################
-    toe_window_min = 90
-    toe_window_max = 180
-    packet_len = 520
-    # For dates
+# Get the filter coefficients so we can check its frequency response.
+b, a = signal.butter(3, 0.048)
+# create timeframe for all samples
+t = np.linspace(0, (packet_len - 1) * 0.02, packet_len)
+# create auxiliary objects
+clipped_data = np.zeros(packet_len)
+virtual_impacts = np.zeros(packet_len)
+impacts_mask = np.zeros(packet_len)
 
-    # Get the filter coefficients so we can check its frequency response.
-    b, a = signal.butter(3, 0.048)
-    # create timeframe for all samples
-    t = np.linspace(0, (packet_len - 1) * 0.02, packet_len)
-    # create auxiliary objects
-    clipped_data = np.zeros(packet_len)
-    virtual_impacts = np.zeros(packet_len)
-    impacts_mask = np.zeros(packet_len)
+# impact threshold
+threshold = 1
 
-    # impact threshold
-    threshold = 1
+# functions
+# fitfunc = lambda p, x: p[0]*np.cos(2*np.pi*p[1]*x+p[2]) + p[3]
+fitfunc = lambda p, x: np.cos(2 * np.pi * p[1] * x + p[2]) + p[3]
+errfunc = lambda p, x, y: fitfunc(p, x) - y
+anglefunc = lambda p, x: (2 * np.pi * p[1] * x + p[2])  # Radians
+degfunc = lambda p, x: map(math.degrees, np.mod((2 * np.pi * p[1] * x + p[2]), 2 * np.pi))  # degrees
 
-    # functions
-    # fitfunc = lambda p, x: p[0]*np.cos(2*np.pi*p[1]*x+p[2]) + p[3]
-    fitfunc = lambda p, x: np.cos(2 * np.pi * p[1] * x + p[2]) + p[3]
-    errfunc = lambda p, x, y: fitfunc(p, x) - y
-    anglefunc = lambda p, x: (2 * np.pi * p[1] * x + p[2])  # Radians
-    degfunc = lambda p, x: map(math.degrees, np.mod((2 * np.pi * p[1] * x + p[2]), 2 * np.pi))  # degrees
+sample = signal
+dates = []
+speeds = []
+hist2d = []
+impacts = []
+toe = []
+toe_std = []
 
-    sample = signal
-    dates = []
-    speeds = []
-    hist2d = []
-    impacts = []
-    toe = []
-    toe_std = []
 
-    ######################################################################
-
+def process(señal):
+    sample = señal
     for i in range(len(sample) - 1):
         if i == 0:
             virtual_impacts[i] = np.abs(sample[i])
@@ -87,65 +84,65 @@ def process(signal):
     p1, success = optimize.leastsq(errfunc, p0[:], args=(t, clipped_data))
 
     # TOE PROCESS
-    raw_impacts = np.subtract(sample, fitfunc(p1, t))
-    raw_impacts = abs(raw_impacts)
-    impacts_index = degfunc(p1, t)
-    impacts_sum = np.zeros(360)
-
-    for i in range(len(raw_impacts)):
-        deg_index = int(np.around(impacts_index[i]))
-        if deg_index == 360:  # correction for 360 to 0
-            deg_index = 0
-        impacts_sum[deg_index] += raw_impacts[i]
-    # print impacts_sum
-    impacts_angles = np.arange(toe_window_min, toe_window_max)
-    try:
-        mu = np.average(impacts_angles, weights=impacts_sum[toe_window_min:toe_window_max])
-        std = math.sqrt(np.average((impacts_angles - mu) ** 2, weights=impacts_sum[toe_window_min:toe_window_max]))
-        toe_in_degrees = mu
-        toe_in_radians = mu * np.pi / 180
-    except:
-        pass
+    # raw_impacts = np.subtract(sample, fitfunc(p1, t))
+    # raw_impacts = abs(raw_impacts)
+    # impacts_index = degfunc(p1, t)
+    # impacts_sum = np.zeros(360)
+    #
+    # for i in range(len(raw_impacts)):
+    #     deg_index = int(np.around(impacts_index[i]))
+    #     if deg_index == 360:  # correction for 360 to 0
+    #         deg_index = 0
+    #     impacts_sum[deg_index] += raw_impacts[i]
+    # # print impacts_sum
+    # impacts_angles = np.arange(toe_window_min, toe_window_max)
+    # try:
+    #     mu = np.average(impacts_angles, weights=impacts_sum[toe_window_min:toe_window_max])
+    #     std = math.sqrt(np.average((impacts_angles - mu) ** 2, weights=impacts_sum[toe_window_min:toe_window_max]))
+    #     toe_in_degrees = mu
+    #     toe_in_radians = mu * np.pi / 180
+    # except:
+    #     pass
 
     ###
     # impacts = np.subtract(sample,fitfunc(p1,t))
     # impacts = abs(impacts)
-    impacts.append(sum(abs(num) >= 12 for num in sample))
+    # impacts.append(sum(abs(num) >= 12 for num in sample))
 
-    hist, bin_edges = np.histogram(abs(np.array(sample)), bins=np.arange(4, 16, 0.4))
-    hist2d.append(hist)
+    # hist, bin_edges = np.histogram(abs(np.array(sample)), bins=np.arange(4, 16, 0.4))
+    # hist2d.append(hist)
+    #
+    # RPM = abs(60 * (p1[1]))
+    # if (RPM > 9 and RPM < 11):
+    #     speeds.append(RPM)
+    #     toe.append(toe_in_degrees)
+    #     toe_std.append(std)
+    #     hist, bin_edges = np.histogram(sample, bins=np.arange(4, 16, 0.4))
+    #     hist2d.append(hist)
+    #
+    # else:
+    #     try:
+    #         toe.append(toe[-1])
+    #         toe_std.append(toe_std[-1])
+    #         speeds.append(speeds[-1])
+    #         hist2d.append(hist2d[-1])
+    #
+    #     except:
+    #         toe.append(180)
+    #         toe_std.append(60)
+    #         speeds.append(10)
+    #         hist2d.append(np.zeros(len(np.arange(4, 16, 0.4))))
+    #
+    # hist2d = np.array(hist2d)  # conversion
+    # hist2d = np.flip(hist2d.T, 0)  # transpose and flip UD
+    # interval = [min(dates), max(dates)]
 
-    RPM = abs(60 * (p1[1]))
-    if (RPM > 9 and RPM < 11):
-        speeds.append(RPM)
-        toe.append(toe_in_degrees)
-        toe_std.append(std)
-        hist, bin_edges = np.histogram(sample, bins=np.arange(4, 16, 0.4))
-        hist2d.append(hist)
-
-    else:
-        try:
-            toe.append(toe[-1])
-            toe_std.append(toe_std[-1])
-            speeds.append(speeds[-1])
-            hist2d.append(hist2d[-1])
-
-        except:
-            toe.append(180)
-            toe_std.append(60)
-            speeds.append(10)
-            hist2d.append(np.zeros(len(np.arange(4, 16, 0.4))))
-
-    hist2d = np.array(hist2d)  # conversion
-    hist2d = np.flip(hist2d.T, 0)  # transpose and flip UD
-    interval = [min(dates), max(dates)]
-
-    return (speeds, hist2d, interval, p1, impacts, dates, toe, toe_std)
+    return p1
 
 # plt.plot(sample)
 # plt.plot(clipped_data)
 # plt.plot(filtered_data)
-# plt.plot(fitfunc(p1,t))
+# plt.plot(fitfunc(p1,t)) # TODO: GRÁFICA DE P1
 # plt.show
 # plt.pause(5)
 # plt.clf()

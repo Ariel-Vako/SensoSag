@@ -1,15 +1,16 @@
 # Clustering
+import pyamg
+import numpy as np
+from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.cluster import KMeans, MiniBatchKMeans, \
     AffinityPropagation, MeanShift, \
     estimate_bandwidth, spectral_clustering, \
     AgglomerativeClustering, DBSCAN, OPTICS, Birch
-
-import pyamg
-import numpy as np
-from sklearn.metrics.pairwise import euclidean_distances
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
 
 
-def clustering(signal_features, no_cluster=4):
+def clustering(signal_features, no_cluster=7):
     kmeans = KMeans(n_clusters=no_cluster, random_state=0).fit(signal_features)
     mini_kmeans = MiniBatchKMeans(n_clusters=no_cluster, random_state=0, max_iter=10).fit(signal_features)
     af = AffinityPropagation(preference=-500).fit(signal_features)
@@ -44,8 +45,32 @@ def clustering(signal_features, no_cluster=4):
     # --- Birch
     brc = Birch(branching_factor=100, n_clusters=no_cluster, threshold=20, compute_labels=True)
     brc.fit(signal_features)
-    return kmeans, mini_kmeans, af, ms, labels_sc, clustering_ward, clustering_average, \
-           clustering_complete, clustering_single, db, optics, brc
+    return [kmeans, mini_kmeans, af, ms, labels_sc, clustering_ward, clustering_average, \
+            clustering_complete, clustering_single, db, optics, brc]
+
+
+def componentes_principales(features):
+    pca = PCA(n_components=2)
+    caract = pca.fit_transform(features)
+    return caract, pca
+
+
+def graficar_pca(matriz, labels):
+    x = matriz[:, 0]
+    y = matriz[:, 1]
+    fig, ax = plt.subplots(figsize=(12, 8))
+    # plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
+    ax.scatter(x, y, c=labels, alpha=0.3)
+    ax.set_title(f'Gráfica de componentes principales', fontsize=18)
+    ax.set_ylabel('PCA2', fontsize=16)
+    ax.set_xlabel('PCA1', fontsize=16)
+    # ax.set_xlim(-50, 250)
+    # ax.set_ylim(-50, 150)
+    ax.grid(b=True, which='major', color='#666666')
+    ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
+    ax.minorticks_on()
+    plt.show()
+    return
 
 # labels = mini_kmeans.labels_
 # labels = kmeans.labels_

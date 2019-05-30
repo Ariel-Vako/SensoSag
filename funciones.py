@@ -5,6 +5,7 @@ import MySQLdb
 import scipy
 import scipy.optimize
 import collections
+import datetime
 
 
 def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
@@ -15,7 +16,8 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     return reconstructed_signal, coeff
 
 
-def grafica(signal, ciclo, reconstructed_signal, coseno, path):
+def grafica(signal, ciclo, reconstructed_signal, coseno, path, dates):
+    fecha = datetime.datetime.strftime(dates[0], '%d-%m-%Y ~ %H:%M:%S')
     plt.close('all')
     fig, ax = plt.subplots(figsize=(12, 8))
     plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
@@ -23,8 +25,10 @@ def grafica(signal, ciclo, reconstructed_signal, coseno, path):
     rec = reconstructed_signal
     ax.plot(rec, 'k', label='DWT smoothing', linewidth=2)
     ax.plot(coseno, 'r', label='Sine fit', linewidth=1, linestyle='--')
+    # JS
+    # ax.plot(js, 'g', label='Sine JS', linewidth=1, linestyle='--')
     ax.legend()
-    ax.set_title(f'Cicle {ciclo + 1}', fontsize=18)
+    ax.set_title(f'Cicle {ciclo + 1}: {fecha}', fontsize=18)
     ax.set_ylabel('Signal Amplitude', fontsize=16)
     ax.set_xlabel('Time', fontsize=16)
     ax.grid(b=True, which='major', color='#666666')
@@ -32,7 +36,7 @@ def grafica(signal, ciclo, reconstructed_signal, coseno, path):
     ax.minorticks_on()
     # plt.show()
     fig.savefig(f'{path}/Ciclo {ciclo}.png')
-    return fig
+    return
 
 
 def calculate_entropy(list_values):
@@ -87,7 +91,7 @@ def consulta_acellz(start_date, end_date, cantidad=5000):
     db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
     cursor = db.cursor()
     cursor.execute(
-        "SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (1) AND estado_data = 134217727 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s",
+        "SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (3) AND estado_data = 134217727 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s",
         (start_date, end_date, cantidad))
     results = cursor.fetchall()
     db.close()
@@ -118,7 +122,7 @@ def residuos(t, rec_signal, amplitud, frecuencia, desfase, desplazamiento_y):
 def robust_fitting(signal):
     # Opciones optimización robusta:
     # [linear, huber, soft_l1, cauchy, arctan]
-    x0 = [1, 1 / 270, 1.4, -0.5]
+    x0 = [1, 1 / 280, 1.4, -0.5]
     t = np.linspace(0, len(signal), 540)
-    popt, pcov = scipy.optimize.curve_fit(fundamental, t, signal, p0=x0, bounds=([-1, 1 / 290, -6, -1], [1., 1 / 260, 6, 1]))
+    popt, pcov = scipy.optimize.curve_fit(fundamental, t, signal, p0=x0, bounds=([-1, 1 / 320, -6, -1], [1., 1 / 200, 6, 1]))
     return popt, pcov
