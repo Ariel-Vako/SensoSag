@@ -1,5 +1,6 @@
 # Clustering
 import pyamg
+import params
 import numpy as np
 from sklearn.metrics.pairwise import euclidean_distances
 from sklearn.cluster import KMeans, MiniBatchKMeans, \
@@ -23,7 +24,7 @@ def clustering(signal_features, no_cluster=7):
 
     # --- Spectral Clustering
     affinity = np.exp(-euclidean_distances(signal_features) / np.std(signal_features))
-    labels_sc = spectral_clustering(affinity, n_clusters=no_cluster, eigen_solver='amg')
+    labels_sc = spectral_clustering(affinity, n_clusters=no_cluster, eigen_solver='arpack')
 
     # --- Agglomerative Clustering - Solo métrica euclidiana
     clustering_ward = AgglomerativeClustering(linkage='ward', n_clusters=no_cluster)
@@ -45,8 +46,8 @@ def clustering(signal_features, no_cluster=7):
     # --- Birch
     brc = Birch(branching_factor=100, n_clusters=no_cluster, threshold=20, compute_labels=True)
     brc.fit(signal_features)
-    return [kmeans, mini_kmeans, af, ms, labels_sc, clustering_ward, clustering_average, \
-            clustering_complete, clustering_single, db, optics, brc]
+    return [kmeans, mini_kmeans, af, ms, labels_sc, clustering_ward, clustering_average, clustering_complete, clustering_single,
+            db, optics, brc]
 
 
 def componentes_principales(features):
@@ -55,13 +56,17 @@ def componentes_principales(features):
     return caract, pca
 
 
-def graficar_pca(matriz, labels):
+def graficar_pca(matriz, labels, i):
+    método = ['KMeans', 'Mini Batch KMeans', 'Affinity Propagation', 'Mean Shift', 'Spectral Clustering', 'Hierarchical clustering: Ward',
+              'Hierarchical clustering: Average', 'Hierarchical clustering: Complete', 'Hierarchical clustering: Single',
+              'DBSCAN', 'OPTICS', 'Birch']
     x = matriz[:, 0]
     y = matriz[:, 1]
-    fig, ax = plt.subplots(figsize=(12, 8))
+
+    fig, ax = plt.subplots(figsize=(14, 10))
     # plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
-    ax.scatter(x, y, c=labels, alpha=0.3)
-    ax.set_title(f'Gráfica de componentes principales', fontsize=18)
+    ax.scatter(x, y, c=labels, alpha=0.3, label=labels)
+    ax.set_title(f'PCA: {método[i]}', fontsize=18)
     ax.set_ylabel('PCA2', fontsize=16)
     ax.set_xlabel('PCA1', fontsize=16)
     # ax.set_xlim(-50, 250)
@@ -69,7 +74,11 @@ def graficar_pca(matriz, labels):
     ax.grid(b=True, which='major', color='#666666')
     ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
     ax.minorticks_on()
-    plt.show()
+    ax.legend()
+    # plt.show()
+    path = params.ruta + '/gráficas-pca'
+    fig.savefig(f'{path}/{método[i]}.png')
+    plt.close('all')
     return
 
 # labels = mini_kmeans.labels_

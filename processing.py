@@ -24,7 +24,7 @@ import clusters as grp
 
 
 # First run
-ruta = os.path.dirname(os.path.realpath(__file__))
+ruta = params.ruta
 query = ruta + f"/consulta - {params.startDate} - {params.endDate} : {params.cantidad}.txt"
 if not os.path.isfile(query):
     consulta = fx.consulta_acellz(params.startDate, params.endDate, params.cantidad)
@@ -65,10 +65,27 @@ if not os.path.isfile(características):
     with open(características, 'wb') as fp:
         pickle.dump(signal_features, fp)
 
+
 with open(características, 'rb') as fp:
     signal_features = pickle.load(fp)
 
+
 caract, pca = grp.componentes_principales(signal_features)
-all_cluster = grp.clustering(caract, no_cluster=5)
-grp.graficar_pca(caract, all_cluster[0].labels_)
+print(f'Varianza Explicada: {np.sum(pca.explained_variance_ratio_)}')
+
+# First run
+pwd_grupos = ruta + f"/clusters - {params.startDate} - {params.endDate} : Size {params.no_cluster}.txt"
+if not os.path.isfile(pwd_grupos):
+    all_cluster = grp.clustering(caract, no_cluster=params.no_cluster)
+    with open(pwd_grupos, 'wb') as fp2:
+        pickle.dump(all_cluster, fp2)
+
+with open(pwd_grupos, 'rb') as fp2:
+    all_cluster = pickle.load(fp2)
+
+for i in range(len(all_cluster)):
+    if i == 4:
+        grp.graficar_pca(caract, all_cluster[i], i)
+    else:
+        grp.graficar_pca(caract, all_cluster[i].labels_, i)
 print('')
