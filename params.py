@@ -18,4 +18,4 @@ ruta = os.path.dirname(os.path.realpath(__file__))
 pwd = ruta + '/Imágenes'
 
 # Número de grupos
-no_cluster = 7
+no_cluster = 5

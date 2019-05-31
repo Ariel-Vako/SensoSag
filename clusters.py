@@ -8,13 +8,16 @@ from sklearn.cluster import KMeans, MiniBatchKMeans, \
     estimate_bandwidth, spectral_clustering, \
     AgglomerativeClustering, DBSCAN, OPTICS, Birch
 from sklearn.decomposition import PCA
+from itertools import groupby
 import matplotlib.pyplot as plt
+
+# plt.style.use('seaborn-pastel')
 
 
 def clustering(signal_features, no_cluster=7):
     kmeans = KMeans(n_clusters=no_cluster, random_state=0).fit(signal_features)
     mini_kmeans = MiniBatchKMeans(n_clusters=no_cluster, random_state=0, max_iter=10).fit(signal_features)
-    af = AffinityPropagation(preference=-500).fit(signal_features)
+    af = AffinityPropagation(preference=-10).fit(signal_features)
 
     # --- Mean Shift
     bandwidth = estimate_bandwidth(signal_features, quantile=0.8)
@@ -63,9 +66,11 @@ def graficar_pca(matriz, labels, i):
     x = matriz[:, 0]
     y = matriz[:, 1]
 
+    etiquetas_agrupadas = [k for k, it in groupby(sorted(labels))]
+
     fig, ax = plt.subplots(figsize=(14, 10))
     # plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
-    ax.scatter(x, y, c=labels, alpha=0.3, label=labels)
+    scatter = ax.scatter(x, y, c=labels, alpha=0.3, label=labels,)
     ax.set_title(f'PCA: {método[i]}', fontsize=18)
     ax.set_ylabel('PCA2', fontsize=16)
     ax.set_xlabel('PCA1', fontsize=16)
@@ -74,11 +79,14 @@ def graficar_pca(matriz, labels, i):
     ax.grid(b=True, which='major', color='#666666')
     ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
     ax.minorticks_on()
-    ax.legend()
+
+    legend1 = ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
+    ax.add_artist(legend1)
+
     # plt.show()
     path = params.ruta + '/gráficas-pca'
     fig.savefig(f'{path}/{método[i]}.png')
-    plt.close('all')
+    # plt.close('all')
     return
 
 # labels = mini_kmeans.labels_

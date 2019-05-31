@@ -71,7 +71,7 @@ with open(características, 'rb') as fp:
 
 
 caract, pca = grp.componentes_principales(signal_features)
-print(f'Varianza Explicada: {np.sum(pca.explained_variance_ratio_)}')
+print(f'Varianza Explicada: {100*np.round(np.sum(pca.explained_variance_ratio_),4)}%')
 
 # First run
 pwd_grupos = ruta + f"/clusters - {params.startDate} - {params.endDate} : Size {params.no_cluster}.txt"
