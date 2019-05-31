@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 from itertools import groupby
 import matplotlib.pyplot as plt
 
+
 # plt.style.use('seaborn-pastel')
 
 
@@ -70,7 +71,7 @@ def graficar_pca(matriz, labels, i):
 
     fig, ax = plt.subplots(figsize=(14, 10))
     # plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
-    scatter = ax.scatter(x, y, c=labels, alpha=0.3, label=labels,)
+    scatter = ax.scatter(x, y, c=labels, alpha=0.3, label=labels, )
     ax.set_title(f'PCA: {método[i]}', fontsize=18)
     ax.set_ylabel('PCA2', fontsize=16)
     ax.set_xlabel('PCA1', fontsize=16)
@@ -89,6 +90,7 @@ def graficar_pca(matriz, labels, i):
     # plt.close('all')
     return
 
+
 # labels = mini_kmeans.labels_
 # labels = kmeans.labels_
 # labels = clustering_ward.labels_
@@ -102,4 +104,6 @@ def graficar_pca(matriz, labels, i):
 # for label in np.unique(labels):  # (af.labels_):
 #     counts[label] = np.count_nonzero(labels == label)
 #
-# print('Features counts: ', counts)
+for i in range(len(all_cluster[11].labels_)):
+    if all_cluster[11].labels_[i] == 1 or all_cluster[11].labels_[i] ==2:
+        print(i)
