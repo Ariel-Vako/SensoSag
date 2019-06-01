@@ -104,6 +104,6 @@ def graficar_pca(matriz, labels, i):
 # for label in np.unique(labels):  # (af.labels_):
 #     counts[label] = np.count_nonzero(labels == label)
 #
-for i in range(len(all_cluster[11].labels_)):
-    if all_cluster[11].labels_[i] == 1 or all_cluster[11].labels_[i] ==2:
-        print(i)
+# for i in range(len(all_cluster[11].labels_)):
+#     if all_cluster[11].labels_[i] == 1 or all_cluster[11].labels_[i] ==2:
+#         print(i)

@@ -16,7 +16,7 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     return reconstructed_signal, coeff
 
 
-def grafica(signal, ciclo, reconstructed_signal, coseno, path, dates):
+def grafica(signal, ciclo, reconstructed_signal, path, dates):
     fecha = datetime.datetime.strftime(dates[0], '%d-%m-%Y ~ %H:%M:%S')
     plt.close('all')
     fig, ax = plt.subplots(figsize=(12, 8))
@@ -24,7 +24,7 @@ def grafica(signal, ciclo, reconstructed_signal, coseno, path, dates):
     ax.plot(signal, color="b", alpha=0.5, label='original signal')
     rec = reconstructed_signal
     ax.plot(rec, 'k', label='DWT smoothing', linewidth=2)
-    ax.plot(coseno, 'r', label='Sine fit', linewidth=1, linestyle='--')
+    # ax.plot(coseno, 'r', label='Sine fit', linewidth=1, linestyle='--')
     # JS
     # ax.plot(js, 'g', label='Sine JS', linewidth=1, linestyle='--')
     ax.legend()

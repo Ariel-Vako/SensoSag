@@ -36,7 +36,7 @@ if not os.path.isfile(características):
     with open(query, 'rb') as fp:
         consulta = pickle.load(fp)
 
-    cont = 0
+    cont = 1906
     tecla = ''
     signal_features = []
     while cont < len(consulta):
@@ -56,7 +56,7 @@ if not os.path.isfile(características):
         # fx.grafica(signal, cont, rec, sine, params.pwd, sine_js)
         # ----
 
-        # fx.grafica(signal, cont, rec, sine, params.pwd, dates)
+        fx.grafica(signal, cont, rec, params.pwd, dates)
         for coeff in list_coeff:
             features += fx.get_features(coeff)
         signal_features.append(features)
