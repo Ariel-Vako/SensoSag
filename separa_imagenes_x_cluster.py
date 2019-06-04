@@ -13,9 +13,10 @@ for index, labels in enumerate(etiquetas):
     ruta_imagen = ruta + '/Imágenes/'
     if index < 406:
         imagen = f'Ciclo {index}.png'
-    elif 406 <= index < 1500:
+    elif 406 <= index < 1499:
         imagen = f'Ciclo {index + 1}.png'
-    else:
+    if index >= 1499:
         imagen = f'Ciclo {index + 2}.png'
+
     repositorio = ruta_imagen + f'{labels}/'
     shutil.move(ruta_imagen + imagen, repositorio + imagen)

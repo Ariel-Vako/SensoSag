@@ -146,11 +146,11 @@ def métricas(signal_features):
 #     if all_cluster[11].labels_[i] == 1 or all_cluster[11].labels_[i] ==2:
 #         print(i)
 
-# gof_ward = ruta + "/gof Ward clustering.text"
-# gof_ward = ruta + "/gof Mini Batch Kmeans clustering.text"
-# gof_ward = ruta + "/gof Kmeans clustering.text"
-# gof = ruta + "/gof Spectral Clustering.text"
-# gof = ruta + "/gof Single Clustering.text"
-# gof = ruta + "/gof Birch.text"
+# gof_ward = ruta + "/gof Ward clustering.txt"
+# gof_ward = ruta + "/gof Mini Batch Kmeans clustering.txt"
+# gof_ward = ruta + "/gof Kmeans clustering.txt"
+# gof = ruta + "/gof Spectral Clustering.txt"
+# gof = ruta + "/gof Single Clustering.txt"
+# gof = ruta + "/gof Birch.txt"
 # with open(gof, 'wb') as ward:
 #     pickle.dump(resultados, ward)

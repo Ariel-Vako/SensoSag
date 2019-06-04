@@ -39,6 +39,7 @@ if not os.path.isfile(características):
     cont = 0
     tecla = ''
     signal_features = []
+    señales = []
     while cont < len(consulta):
         # print(cont)
         if not (cont == 406 or cont == 1500):  # Se excluyen las señales con mal comportamiento.
@@ -61,7 +62,12 @@ if not os.path.isfile(características):
             for coeff in list_coeff:
                 features += fx.get_features(coeff)
             signal_features.append(features)
+            señales.append(signal)
         cont += 1
+
+    señal_bckup = ruta + f'/signal_features- {params.startDate} - {params.endDate}.txt'
+    with open(señal_bckup, 'wb') as fl:
+        pickle.dump(señales, fl)
 
     with open(características, 'wb') as fp:
         pickle.dump(signal_features, fp)
