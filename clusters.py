@@ -150,5 +150,6 @@ def métricas(signal_features):
 # gof_ward = ruta + "/gof Kmeans clustering.text"
 # gof = ruta + "/gof Spectral Clustering.text"
 # gof = ruta + "/gof Single Clustering.text"
+# gof = ruta + "/gof Birch.text"
 # with open(gof, 'wb') as ward:
 #     pickle.dump(resultados, ward)
