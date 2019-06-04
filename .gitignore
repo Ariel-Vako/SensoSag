@@ -12,3 +12,17 @@ ssmlp003.m
 venv/
 /ssmlp003b.m
 __pycache__/
+.~lock.signal_features- 2018-08-01 00:00 - 2018-11-30 00:00 : 5000.txt#
+"Im\303\241genes/"
+clusters - 2018-08-01 00:00 - 2018-12-31 00:00 : Size 5.txt
+consulta - 2018-08-01 00:00 - 2018-12-31 00:00 : 8000.txt
+gof Average Clustering.text
+gof Birch.text
+gof Complete Clustering.text
+gof Kmeans clustering.text
+gof Mini Batch Kmeans clustering.text
+gof Single Clustering.text
+gof Spectral Clustering.text
+gof Ward clustering.text
+"gr\303\241ficas-pca/"
+signal_features- 2018-08-01 00:00 - 2018-12-31 00:00 : 8000.txt

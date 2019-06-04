@@ -8,7 +8,7 @@ list_gof = [#'gof Average Clustering.text',
             # 'gof Mini Batch Kmeans clustering.text',
             # 'gof Single Clustering.text',
             # 'gof Spectral Clustering.text',
-            'gof Ward clustering.text']
+            'gof Ward clustering.text'] # Best Performance
 
 cluster_gof = np.array([[2, 3, 4, 5, 6, 7, 8, 9]]).T
 for gof in list_gof:
