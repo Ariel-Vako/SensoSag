@@ -65,11 +65,17 @@ def graficar_pca(matriz, labels, i):
     x = matriz[:, 0]
     y = matriz[:, 1]
 
+    groups = {'A': (5, 5),
+              'B': (15, 55),
+              'C': (-15, -15),
+              'D': (200, -5),
+              'E': (55, 5)}
+
     etiquetas_agrupadas = [k for k, it in groupby(sorted(labels))]
 
     fig, ax = plt.subplots(figsize=(14, 10))
     # plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
-    scatter = ax.scatter(x, y, c=labels, alpha=0.3, label=labels, )
+    scatter = ax.scatter(x, y, c=labels, alpha=0.3, label=labels)
     ax.set_title(f'PCA: {método[i]}', fontsize=18)
     ax.set_ylabel('PCA2', fontsize=16)
     ax.set_xlabel('PCA1', fontsize=16)
@@ -78,6 +84,15 @@ def graficar_pca(matriz, labels, i):
     ax.grid(b=True, which='major', color='#666666')
     ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
     ax.minorticks_on()
+
+    for label, pos in groups.items():
+        plt.annotate(label,
+                     pos,
+                     horizontalalignment='center',
+                     verticalalignment='center',
+                     size=20,
+                     weight='bold',
+                     color='white')
 
     legend1 = ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
     ax.add_artist(legend1)
@@ -127,7 +142,6 @@ def métricas(signal_features):
         result[i - 2, 3] = np.round(db, 3)
         # print(f'Amount of clusters: {i} & Silhouette Score: {np.round(ss, 3)} & Calinski-Harabasz Index: {np.round(ch, 3)}')
     return result
-
 
 # labels = mini_kmeans.labels_
 # labels = kmeans.labels_
