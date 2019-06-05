@@ -65,7 +65,7 @@ if not os.path.isfile(características):
             señales.append(signal)
         cont += 1
 
-    señal_bckup = ruta + f'/signal_features- {params.startDate} - {params.endDate}.txt'
+    señal_bckup = ruta + f'/signal- {params.startDate} - {params.endDate}.txt'
     with open(señal_bckup, 'wb') as fl:
         pickle.dump(señales, fl)
 
