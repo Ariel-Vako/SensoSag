@@ -65,17 +65,23 @@ def graficar_pca(matriz, labels, i):
     x = matriz[:, 0]
     y = matriz[:, 1]
 
-    groups = {'A': (5, 5),
-              'B': (15, 55),
-              'C': (-15, -15),
-              'D': (200, -5),
-              'E': (55, 5)}
+    groups = {'0': {'pos': (5, 5), 'color': (0.267004, 0.004874, 0.329415)},
+              '1': {'pos': (15, 55), 'color': (0.229739, 0.322361, 0.545706)},
+              '2': {'pos': (-15, -15), 'color': (0.127568, 0.566949, 0.550556)},
+              '3': {'pos': (200, -5), 'color': (0.369214, 0.788888, 0.382914)},
+              '4': {'pos': (55, 5), 'color': (0.993248, 0.906157, 0.143936)}}
 
-    etiquetas_agrupadas = [k for k, it in groupby(sorted(labels))]
+    # morado      : (0.267004, 0.004874, 0.329415)
+    # azul        : (0.229739, 0.322361, 0.545706)
+    # verde       : (0.127568, 0.566949, 0.550556)
+    # verde pasto : (0.369214, 0.788888, 0.382914)
+    # amarillo    : (0.993248, 0.906157, 0.143936)
+
+    # etiquetas_agrupadas = [k for k, it in groupby(sorted(labels))]
 
     fig, ax = plt.subplots(figsize=(14, 10))
     # plt.gcf().canvas.set_window_title(f'Removing high frequency noise with DWT - Cicle {ciclo}')
-    scatter = ax.scatter(x, y, c=labels, alpha=0.3, label=labels)
+    scatter = ax.scatter(x, y, c=labels, alpha=0.3)
     ax.set_title(f'PCA: {método[i]}', fontsize=18)
     ax.set_ylabel('PCA2', fontsize=16)
     ax.set_xlabel('PCA1', fontsize=16)
@@ -85,14 +91,15 @@ def graficar_pca(matriz, labels, i):
     ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
     ax.minorticks_on()
 
-    for label, pos in groups.items():
+    for label, value in groups.items():
         plt.annotate(label,
-                     pos,
+                     value['pos'],
                      horizontalalignment='center',
                      verticalalignment='center',
-                     size=20,
+                     size=15,
                      weight='bold',
-                     color='white')
+                     color=value['color'],
+                     backgroundcolor='black')
 
     legend1 = ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
     ax.add_artist(legend1)
