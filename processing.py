@@ -97,3 +97,7 @@ grp.graficar_pca(caract, all_cluster[5].labels_, 5)
 #     else:
 #         grp.graficar_pca(caract, all_cluster[i].labels_, i)
 print('')
+
+# pc = ruta + f'/pc.txt'
+# with open(pc, 'wb') as fp:
+#     pickle.dump(pca.components_, fp)
