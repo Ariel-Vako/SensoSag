@@ -2,8 +2,8 @@ import os
 
 # query parameters
 startDate = '2018-08-01 00:00'
-endDate = '2018-12-31 00:00'
-cantidad = 8000
+endDate = '2018-08-25 00:00'  # '2018-12-31 00:00'
+cantidad = 4000
 
 # Lowpass filter bank parameters
 thresh = 0.3
