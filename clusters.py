@@ -104,9 +104,9 @@ def graficar_pca(matriz, labels, i):
     legend1 = ax.legend(*scatter.legend_elements(), loc="upper right", title="Classes")
     ax.add_artist(legend1)
 
-    # plt.show()
-    path = params.ruta + '/gráficas-pca'
-    fig.savefig(f'{path}/{método[i]}.png')
+    plt.show()
+    # path = params.ruta + '/gráficas-pca'
+    # fig.savefig(f'{path}/{método[i]}.png')
     # plt.close('all')
     return
 
