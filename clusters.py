@@ -10,6 +10,7 @@ from sklearn.decomposition import PCA
 from itertools import groupby
 import matplotlib.pyplot as plt
 import sklearn.metrics
+from sklearn import preprocessing
 
 
 def clustering(signal_features, no_cluster=7):
@@ -53,6 +54,7 @@ def clustering(signal_features, no_cluster=7):
 
 
 def componentes_principales(features):
+    # features = preprocessing.normalize(features)
     pca = PCA(n_components=2)
     caract = pca.fit_transform(features)
     return caract, pca

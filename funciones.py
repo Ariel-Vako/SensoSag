@@ -10,7 +10,7 @@ import datetime
 
 def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     thresh = thresh * np.nanmax(signal)
-    coeff = pywt.wavedec(signal, wavelet, mode="per")
+    coeff = pywt.wavedec(signal, wavelet, mode="per")  # , level=6)
     coeff[1:] = (pywt.threshold(i, value=thresh, mode="soft") for i in coeff[1:])
     reconstructed_signal = pywt.waverec(coeff, wavelet, mode="per")
     return reconstructed_signal, coeff
@@ -91,7 +91,7 @@ def consulta_acellz(start_date, end_date, cantidad=5000):
     db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
     cursor = db.cursor()
     cursor.execute(
-        "SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (3) AND estado_data = 134217726 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s",
+        "SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (3) AND estado_data = 134217727 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s",
         (start_date, end_date, cantidad))
     results = cursor.fetchall()
     db.close()

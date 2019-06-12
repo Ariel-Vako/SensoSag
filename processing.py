@@ -90,7 +90,7 @@ if not os.path.isfile(pwd_grupos):
 with open(pwd_grupos, 'rb') as fp2:
     all_cluster = pickle.load(fp2)
 
-grp.graficar_pca(caract, all_cluster[5].labels_, 5)
+grp.graficar_pca(caract, all_cluster.labels_, 5)
 # for i in range(len(all_cluster)):
 #     if i == 4:
 #         grp.graficar_pca(caract, all_cluster[i], i)
@@ -98,6 +98,4 @@ grp.graficar_pca(caract, all_cluster[5].labels_, 5)
 #         grp.graficar_pca(caract, all_cluster[i].labels_, i)
 print('')
 
-# pc = ruta + f'/pc.txt'
-# with open(pc, 'wb') as fp:
-#     pickle.dump(pca.components_, fp)
+
