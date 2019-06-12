@@ -11,7 +11,8 @@ __email__ = 'amardones@highservice.cl'
 
 __source__ = 'http://ataspinar.com/2018/12/21/a-guide-for-using-the-wavelet-transform-in-machine-learning/' \
              'https://scipy-cookbook.readthedocs.io/items/robust_regression.html' \
-             'https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering'
+             'https://scikit-learn.org/stable/modules/clustering.html#hierarchical-clustering' \
+             'https://scikit-learn.org/stable/auto_examples/cluster/plot_inductive_clustering.html#sphx-glr-auto-examples-cluster-plot-inductive-clustering-py'
 
 import params
 import funciones as fx
@@ -98,4 +99,9 @@ grp.graficar_pca(caract, all_cluster.labels_, 5)
 #         grp.graficar_pca(caract, all_cluster[i].labels_, i)
 print('')
 
+# INDUCTIVE CLASSIFIER
+# Solo una vez para entrenar al Random Forest
+# pca_caract = params.ruta + f'/PCA_CARACT - {params.startDate} - {params.endDate} : Size {params.cantidad}.txt'
+# with open(pca_caract, 'wb') as fp:
+#     pickle.dump(caract, fp)
 
