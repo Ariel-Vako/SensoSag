@@ -1,11 +1,13 @@
+"""Random Forest entrenado con el clustering Ward.
+Obs.: Recordar quitar la media a la señal filtrada antes de aplicar las componentes principales.
+"""
+
 import pickle
 import params
 import numpy as np
 import clusters as grp
 # ----------
 from sklearn.base import BaseEstimator, clone
-from sklearn.cluster import AgglomerativeClustering
-from sklearn.datasets import make_blobs
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.utils.metaestimators import if_delegate_has_method
 
@@ -68,6 +70,7 @@ inductive_learner = InductiveClusterer(ward, classifier).fit(pca_caract)
 
 probable_clusters = inductive_learner.predict(pc_señal)
 print('')
+# Guardado del clasificador inductivo (Random Forest)
 # clasificador_inductivo = params.ruta + f'/randomForest.txt'
 # with open(clasificador_inductivo, 'wb') as fn:
 #     pickle.dump(inductive_learner, fn)

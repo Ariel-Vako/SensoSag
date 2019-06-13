@@ -1,3 +1,5 @@
+"""Se leen datos desde csv y luego se grafican variables del molino SAG2 : Agosto del 2018"""
+
 __source__ = 'https://matplotlib.org/gallery/api/date.html'
 
 import pandas as pd
@@ -19,7 +21,7 @@ if not os.path.isfile(sag2):
     misssing_values = ['[-11059] No Good Data For Calculation']
     df = pd.read_csv('SAG2 - Octubre2018.csv',
                      na_values=misssing_values)
-    df['Fecha'] = [datetime.strptime(i, '%d-%m-%Y %H:%M') for i in df['Fecha']]
+    df['Fecha'] = [datetime.strptime(i, '%d-%m-%Y %H:%M:%S') for i in df['Fecha']]
     with open(sag2, 'wb') as f:
         pickle.dump(df, f)
 
