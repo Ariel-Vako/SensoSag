@@ -7,6 +7,7 @@ from matplotlib.ticker import MultipleLocator
 import pickle
 import params
 import numpy as np
+import mpld3
 
 # Lectura de datos
 # 1.- Lectura de cluster para extraer etiquetas.
@@ -20,24 +21,24 @@ archivo_train_fechas = params.ruta + '/Fechas/fechas.txt'
 with open(archivo_train_fechas, 'rb') as fp:
     fechas = pickle.load(fp)
 
-
-dia = mdates.DayLocator(interval=2)  # Cada 7 días
+# Setting de los ticks del eje X
+dia = mdates.DayLocator(interval=1)
 dia_formato = mdates.DateFormatter('%d %b')
-start = 10  # Desde que ciclo se comienza a graficar
-n = 20  # número de ciclos a graficar
+start = 100  # Desde que ciclo se comienza a graficar
+n = 200  # número de ciclos a graficar
 
 kolor = all_cluster.labels_
-# fechas_aux = [datetime.strftime(i[0], '%d-%m-%Y %H:%M:%S') for i in fechas]
 fig, ax = plt.subplots(figsize=(14, 8))
 
 # Formato de ejes
 ax.xaxis.set_major_locator(dia)
 ax.xaxis.set_major_formatter(dia_formato)
-ax.set_xlim([fechas[start] - timedelta(days=1), fechas[n]])
-ax.set_title(f'Cluster en el tiempo para {n} ciclos', fontsize=18)
-ax.set_ylabel('Grupos', fontsize=16)
-ax.set_xlabel('Fechas', fontsize=16)
+ax.set_xlim([fechas[start], fechas[n]])  # - timedelta(days=1)
+ax.set_title(f'Cluster en el tiempo para {n-start} ciclos', fontsize=18)
+ax.set_ylabel('Grupos', fontsize=14)
+ax.set_xlabel('Fechas', fontsize=14)
 ax.set_yticks(np.arange(0, 5, step=1))
+
 
 ax.grid(b=True, which='major', color='#666666')
 ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
@@ -46,5 +47,12 @@ ax.minorticks_on()
 
 plt.xticks(rotation=45)
 
-scatter = ax.scatter(fechas[start: n], kolor[start: n], c=kolor[start: n], alpha=0.3)
+scatter = ax.scatter(fechas[start: n], kolor[start: n], c=kolor[start: n], alpha=0.3, s=200)
+
+# Mouseover tooltip the points
+# etiqueta = [f'Fecha {i}' for i in fechas]
+# tooltip = mpld3.plugins.PointLabelTooltip(scatter, labels=etiqueta)
+# mpld3.plugins.connect(fig, tooltip)
+#
 plt.show()
+
