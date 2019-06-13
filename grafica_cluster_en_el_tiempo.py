@@ -7,7 +7,7 @@ from matplotlib.ticker import MultipleLocator
 import pickle
 import params
 import numpy as np
-import mpld3
+import mplcursors
 
 # Lectura de datos
 # 1.- Lectura de cluster para extraer etiquetas.
@@ -23,7 +23,7 @@ with open(archivo_train_fechas, 'rb') as fp:
 
 # Setting de los ticks del eje X
 dia = mdates.DayLocator(interval=1)
-dia_formato = mdates.DateFormatter('%d %b')
+dia_formato = mdates.DateFormatter('%b%d-%H:%M')
 start = 100  # Desde que ciclo se comienza a graficar
 n = 200  # número de ciclos a graficar
 
@@ -50,9 +50,6 @@ plt.xticks(rotation=45)
 scatter = ax.scatter(fechas[start: n], kolor[start: n], c=kolor[start: n], alpha=0.3, s=200)
 
 # Mouseover tooltip the points
-# etiqueta = [f'Fecha {i}' for i in fechas]
-# tooltip = mpld3.plugins.PointLabelTooltip(scatter, labels=etiqueta)
-# mpld3.plugins.connect(fig, tooltip)
-#
+mplcursors.cursor(hover=True, highlight=True)
 plt.show()
 
