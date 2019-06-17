@@ -26,6 +26,7 @@ import clusters as grp
 
 # First run
 ruta = params.ruta
+ruta += '/respaldo-datos'
 query = ruta + f"/consulta - {params.startDate} - {params.endDate} : {params.cantidad}.txt"
 if not os.path.isfile(query):
     consulta = fx.consulta_acellz(params.startDate, params.endDate, params.cantidad)
@@ -42,6 +43,7 @@ if not os.path.isfile(características):
     signal_features = []
     señales = []
     fechas = []
+    señal_filtrada = []
     while cont < len(consulta):
         # print(cont)
         if not (cont == 406 or cont == 1500):  # Se excluyen las señales con mal comportamiento.
@@ -66,11 +68,16 @@ if not os.path.isfile(características):
             signal_features.append(features)
             señales.append(signal)
             fechas.append(dates[0])
+            señal_filtrada.append(rec)
         cont += 1
 
     señal_bckup = ruta + f'/signal- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
     with open(señal_bckup, 'wb') as fl:
         pickle.dump(señales, fl)
+
+    señal_reconstruida = ruta + f'/signal_rec_dwt- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
+    with open(señal_reconstruida, 'wb') as fl:
+        pickle.dump(señal_filtrada, fl)
 
     with open(características, 'wb') as fp:
         pickle.dump(signal_features, fp)
@@ -106,5 +113,3 @@ print('')
 # pca_caract = params.ruta + f'/PCA_CARACT - {params.startDate} - {params.endDate} : Size {params.cantidad}.txt'
 # with open(pca_caract, 'wb') as fp:
 #     pickle.dump(caract, fp)
-
-

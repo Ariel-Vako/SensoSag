@@ -127,7 +127,7 @@ def process(results):
         hist2d.append(hist)
 
         RPM = abs(60 * (p1[1]))
-        if (RPM > 9 and RPM < 11):
+        if 9 < RPM < 11:
             speeds.append(RPM)
             toe.append(toe_in_degrees)
             toe_std.append(std)

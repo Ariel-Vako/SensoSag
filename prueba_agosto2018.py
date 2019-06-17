@@ -1,5 +1,7 @@
 """Random Forest entrenado con el clustering Ward.
 Obs.: Recordar quitar la media a la señal filtrada antes de aplicar las componentes principales.
+
+ De ser posible intentar con otro algoritmo de clasificación, por ejemplo NN con Mahalanobis.
 """
 
 import pickle
