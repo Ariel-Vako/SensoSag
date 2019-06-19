@@ -6,6 +6,7 @@ import scipy
 import scipy.optimize
 import collections
 import datetime
+import params
 
 
 def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
@@ -126,3 +127,44 @@ def robust_fitting(signal):
     t = np.linspace(0, len(signal), 540)
     popt, pcov = scipy.optimize.curve_fit(fundamental, t, signal, p0=x0, bounds=([-1, 1 / 320, -6, -1], [1., 1 / 200, 6, 1]))
     return popt, pcov
+
+
+def toe_average(frecuencia_, raw_impacts_, delta_theta):
+    periodo = 1 / frecuencia_
+    j = 0
+    while j + periodo <= len(raw_impacts_):
+        raw_impacts_[j] += raw_impacts_[int(periodo) + j]
+        j += 1
+    impactos = []
+    t = 0
+    inicio = int(np.ceil((np.pi - delta_theta) / (2 * np.pi * frecuencia_)))
+    fin = int((3 * np.pi / 2 - delta_theta) / (2 * np.pi * frecuencia_)) + 1
+    angulos = 2 * np.pi * frecuencia_ * np.array(range(inicio, fin)) + delta_theta
+    angulos_grad = angulos * 180 / np.pi
+    impacto_ponderación = raw_impacts_[inicio: fin]
+    toe_aux = np.round((angulos_grad @ impacto_ponderación) / sum(impacto_ponderación), 1)
+    print(toe_aux)
+    toe = np.average(angulos_grad, weights=raw_impacts_[inicio: fin])
+    return toe, inicio, fin, raw_impacts_
+
+
+def plot_ajuste(seno, señal_rec, inicio, fin, raw_impacts_, toe_time, toe, i):
+    fig, ax = plt.subplots(figsize=(12, 8))
+    ax.plot(seno, "--b", alpha=0.5, label='Seno ajustado')
+    rec = señal_rec
+    ax.plot(rec, 'k', label='DWT smoothing', linewidth=2)
+    ax.plot(raw_impacts_, 'r', label='Suma de señales', linewidth=2, alpha=0.5)
+    ax.legend()
+    ax.set_title(f'Tiempo del talón {np.round(toe_time, 1)}\n Ángulo: {np.round(toe, 1)}', fontsize=18)
+    ax.set_ylabel('Signal Amplitude', fontsize=16)
+    ax.set_xlabel('Time', fontsize=16)
+    ax.grid(b=True, which='major', color='#666666')
+    ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
+    ax.minorticks_on()
+    ax.axvspan(inicio, fin - 1, alpha=0.5, color='#98FB98')
+    plt.axvline(x=toe_time, color='NAVY')
+    ax.set_xlim([0, 540])
+    # plt.show()
+    fig.savefig(f'{params.ruta}/ImágenesToe/Ciclo {i}.png')
+    plt.close('all')
+    return

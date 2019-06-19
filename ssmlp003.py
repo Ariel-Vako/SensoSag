@@ -209,7 +209,7 @@ for i in np.arange(len(ciclo)):
             siny = ffty[2] * np.sin(omega * (t1 - np.min(t1)) + angffty[2] + np.pi / 2)
 
             # Corrige SINZ
-            # Crea una señal sinusoidal de amplitud 1 (2 peak - peak)
+            # Crea una signal sinusoidal de amplitud 1 (2 peak - peak)
             # en fase con la detección de los máximos
             # Corrige nivel para quedar en línea con z1filt.
             sinz = np.sin(omega * (t1 - np.min(t1)) + angfftz[2] + np.pi / 2 - ajustesinz) - (1 - maxzf2)
