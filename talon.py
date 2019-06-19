@@ -17,17 +17,23 @@ with open(pwd_grupos, 'rb') as fp2:
 labels = all_cluster.labels_
 all_toe = np.zeros(len(signal_rec))
 all_time_toe = np.zeros(len(signal_rec))
+del(signal_rec[0:37])
 for i, dwt in enumerate(signal_rec):
     print(f'Etiqueta: {labels[i]}')
     if not labels[i] == 3:
-        popt, pcov = fx.robust_fitting(dwt)
+        popt, pcov, res_robust = fx.robust_fitting(dwt)
+        # Ajuste mínimo cuadrados normales
         amplitud, frecuencia, desfase, desplazamiento_y = popt[0], popt[1], popt[2], popt[3]
         sine = fx.fundamental(np.linspace(0, len(dwt), 540), amplitud, frecuencia, desfase, desplazamiento_y)
+        # Ajuste mínimos cuadrados robustos
+        amplitud2, frecuencia2, desfase2, desplazamiento_y2 = res_robust.x[0], res_robust.x[1], res_robust.x[2], res_robust.x[3]
+        sine2 = fx.fundamental(np.linspace(0, len(dwt), 540), amplitud2, frecuencia2, desfase2, desplazamiento_y2)
+
         # Método JS
-        raw_impacts = abs(dwt - sine)
-        toe, inicio, fin, raw_impacts_ = fx.toe_average(frecuencia, raw_impacts, desfase)
-        toe_time = (toe - (desfase * 180 / np.pi)) / (360 * frecuencia)
-        fx.plot_ajuste(sine, dwt, inicio, fin, raw_impacts_, toe_time, toe, i)
+        raw_impacts = abs(dwt - sine2)
+        toe, inicio, fin, raw_impacts_ = fx.toe_average(frecuencia2, raw_impacts, desfase2)
+        toe_time = (toe - (desfase2 * 180 / np.pi)) / (360 * frecuencia2)
+        fx.plot_ajuste(sine, dwt, sine2, inicio, fin, raw_impacts_, toe_time, toe, i)
         print(f'Ciclo {i}: Ángulo {np.round(toe, 1)}')
     else:
         print('Molino detenido')

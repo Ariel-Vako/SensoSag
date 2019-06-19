@@ -19,3 +19,9 @@ pwd = ruta + '/Imágenes'
 
 # Número de grupos
 no_cluster = 5
+
+
+# import matplotlib.pyplot as plt
+# plt.plot(sine)
+# plt.plot(dwt)
+# plt.plot(sine2, '--g')
