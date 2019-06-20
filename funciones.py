@@ -8,7 +8,8 @@ import datetime
 import params
 from scipy.optimize import least_squares
 import matplotlib
-# matplotlib.use('Agg')
+
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
@@ -128,20 +129,21 @@ def robust_fitting(signal):
     # [linear, huber, soft_l1, cauchy, arctan]
     x0 = [1, 1 / 280, 0, -0.5]
     t = np.linspace(0, len(signal), 540)
-    popt, pcov = scipy.optimize.curve_fit(fundamental, t, signal, p0=x0, bounds=([-1, 1 / 310, -3.5, -1], [1., 1 / 220, 3.5, 1]))
-    res_robust = least_squares(error_seno, x0, loss='soft_l1', f_scale=0.1, args=(t, signal), bounds=([-1, 1 / 310, -3.5, -1], [1., 1 / 220, 3.5, 1]))
-    return popt, pcov, res_robust
+    res_robust = least_squares(error_seno, x0, loss='soft_l1', f_scale=0.1, args=(t, signal), bounds=([0.5, 1 / 350, -3.5, -1], [1., 1 / 220, 3.5, 1]))
+    return res_robust
 
 
 def toe_average(frecuencia_, raw_impacts_, delta_theta):
     periodo = 1 / frecuencia_
     j = 0
-    while j + periodo <= len(raw_impacts_):
+    while j + periodo < len(raw_impacts_):
         raw_impacts_[j] += raw_impacts_[int(periodo) + j]
         j += 1
     impactos = []
     t = 0
     inicio = int(np.ceil((np.pi - delta_theta) / (2 * np.pi * frecuencia_)))
+    if inicio < 0:
+        inicio = 0
     fin = int((3 * np.pi / 2 - delta_theta) / (2 * np.pi * frecuencia_)) + 1
     print(inicio, fin)
     angulos = 2 * np.pi * frecuencia_ * np.array(range(inicio, fin)) + delta_theta
@@ -151,15 +153,14 @@ def toe_average(frecuencia_, raw_impacts_, delta_theta):
     return toe, inicio, fin, raw_impacts_
 
 
-def plot_ajuste(seno, señal_rec, seno2, inicio, fin, raw_impacts_, toe_time, toe, i):
+def plot_ajuste( señal_rec, seno2, inicio, fin, raw_impacts_, toe_time, toe, i):
     fig, ax = plt.subplots(figsize=(12, 8))
-    ax.plot(seno, "--b", alpha=0.5, label='Seno ajustado')
     rec = señal_rec
     ax.plot(rec, 'k', label='DWT smoothing', linewidth=2)
-    ax.plot(raw_impacts_, 'r', label='Suma de señales', linewidth=2, alpha=0.5)
+    ax.plot(raw_impacts_, 'r', label='Distance l1', linewidth=2, alpha=0.5)
     ax.plot(seno2, '--g', label='MCC Robusto', linewidth=1, alpha=0.7)
     ax.legend()
-    ax.set_title(f'Tiempo del talón {np.round(toe_time, 1)}\n Ángulo: {np.round(toe, 1)}', fontsize=18)
+    ax.set_title(f'Ángulo: {np.round(toe, 1)} at {np.round(toe_time, 1)}', fontsize=18)
     ax.set_ylabel('Signal Amplitude', fontsize=16)
     ax.set_xlabel('Time', fontsize=16)
     ax.grid(b=True, which='major', color='#666666')
