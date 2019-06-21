@@ -34,20 +34,20 @@ for i, dwt in enumerate(signal_rec):
         raw_impacts = abs(dwt - sine2)
         toe, inicio, fin, raw_impacts_ = fx.toe_average(frecuencia2, raw_impacts, desfase2)
         toe_time = (toe - (desfase2 * 180 / np.pi)) / (360 * frecuencia2)
-        fx.plot_ajuste(dwt, sine2, inicio, fin, raw_impacts_, toe_time, toe, i)
+        # fx.plot_ajuste(dwt, sine2, inicio, fin, raw_impacts_, toe_time, toe, i)
         print(f'Ciclo {i}: Ángulo {np.round(toe, 1)}')
     else:
         print('Molino detenido')
     all_toe[i] = toe
     all_time_toe[i] = toe_time
 
-    toe_bckup = ruta + f'/toes- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
-    with open(toe_bckup, 'wb') as fl:
-        pickle.dump(all_toe, fl)
+toe_bckup = ruta + f'/toes- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
+with open(toe_bckup, 'wb') as fl:
+    pickle.dump(all_toe, fl)
 
-    time_toe_bckup = ruta + f'/time_toes- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
-    with open(time_toe_bckup, 'wb') as fl:
-        pickle.dump(all_time_toe, fl)
+time_toe_bckup = ruta + f'/time_toes- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
+with open(time_toe_bckup, 'wb') as fl:
+    pickle.dump(all_time_toe, fl)
 print('')
 
 # Corrección de índices del clúster
