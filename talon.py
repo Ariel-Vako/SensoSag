@@ -18,7 +18,6 @@ labels = all_cluster.labels_
 
 all_toe = np.zeros(len(signal_rec))
 all_time_toe = np.zeros(len(signal_rec))
-# del(signal_rec[0:2626])
 for i, dwt in enumerate(signal_rec):
     print(f'Etiqueta: {labels[i]}')
     if not labels[i] == 3:
@@ -50,3 +49,10 @@ for i, dwt in enumerate(signal_rec):
     with open(time_toe_bckup, 'wb') as fl:
         pickle.dump(all_time_toe, fl)
 print('')
+
+# Corrección de índices del clúster
+# index = list(range(2363, 2395, 1))
+# index.append(3620)
+# index.append(3626)
+# index.append(7725)
+# index.extend(list(range(7745, 7759)))

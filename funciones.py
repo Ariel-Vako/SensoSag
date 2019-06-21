@@ -129,7 +129,7 @@ def robust_fitting(signal):
     # [linear, huber, soft_l1, cauchy, arctan]
     x0 = [1, 1 / 280, 0, -0.5]
     t = np.linspace(0, len(signal), 540)
-    res_robust = least_squares(error_seno, x0, loss='soft_l1', f_scale=0.1, args=(t, signal), bounds=([0.5, 1 / 350, -3.5, -1], [1., 1 / 220, 3.5, 1]))
+    res_robust = least_squares(error_seno, x0, loss='soft_l1', f_scale=0.1, args=(t, signal), bounds=([0.5, 1 / 530, -3.5, -1], [1., 1 / 220, 3.5, 1]))
     return res_robust
 
 
@@ -145,6 +145,8 @@ def toe_average(frecuencia_, raw_impacts_, delta_theta):
     if inicio < 0:
         inicio = 0
     fin = int((3 * np.pi / 2 - delta_theta) / (2 * np.pi * frecuencia_)) + 1
+    if fin > 540:
+        fin = 540
     print(inicio, fin)
     angulos = 2 * np.pi * frecuencia_ * np.array(range(inicio, fin)) + delta_theta
     angulos_grad = angulos * 180 / np.pi
@@ -153,7 +155,7 @@ def toe_average(frecuencia_, raw_impacts_, delta_theta):
     return toe, inicio, fin, raw_impacts_
 
 
-def plot_ajuste( señal_rec, seno2, inicio, fin, raw_impacts_, toe_time, toe, i):
+def plot_ajuste(señal_rec, seno2, inicio, fin, raw_impacts_, toe_time, toe, i):
     fig, ax = plt.subplots(figsize=(12, 8))
     rec = señal_rec
     ax.plot(rec, 'k', label='DWT smoothing', linewidth=2)
@@ -170,7 +172,7 @@ def plot_ajuste( señal_rec, seno2, inicio, fin, raw_impacts_, toe_time, toe, i)
     plt.axvline(x=toe_time, color='NAVY')
     ax.set_xlim([0, 540])
     plt.show()
-    fig.savefig(f'{params.ruta}/ImágenesToe/Ciclo {i}.png')
+    fig.savefig(f'/media/arielmardones/HS/SensoSAG/ImágenesToe/Ciclo {i}.png')
     plt.close('all')
     return
 
