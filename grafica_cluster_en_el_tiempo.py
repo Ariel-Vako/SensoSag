@@ -39,7 +39,6 @@ ax.set_ylabel('Grupos', fontsize=14)
 ax.set_xlabel('Fechas', fontsize=14)
 ax.set_yticks(np.arange(0, 5, step=1))
 
-
 ax.grid(b=True, which='major', color='#666666')
 ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
 ax.xaxis.set_minor_locator(MultipleLocator(1))
@@ -52,4 +51,3 @@ scatter = ax.scatter(fechas[start: n], kolor[start: n], c=kolor[start: n], alpha
 # Mouseover tooltip the points
 mplcursors.cursor(hover=True, highlight=True)
 plt.show()
-
