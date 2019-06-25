@@ -7,16 +7,29 @@ import numpy as np
 
 
 def sma(data, periodo):
-    sma1 = np.zeros(data.size - periodo)
+    sma1 = np.zeros(len(data) - periodo)
     for step in range(len(sma1)):
-        sma1[step] = np.mean(data[step:periodo+step+1])
+        sma1[step] = np.mean(data[step:periodo + step + 1])
     return sma1
+
+
+def trans_angulo(toes):
+    angle_toe = []
+    for angulo in toes:
+        if 0 <= angulo <= 90:
+            beta = 90 - angulo
+        else:
+            beta = abs(450 - angulo)
+        angle_toe.append(beta)
+    return angle_toe
 
 
 ruta = params.ruta + '/respaldo-datos'
 toe_bckup = ruta + f'/toes- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
 with open(toe_bckup, 'rb') as fl:
     all_toe = pickle.load(fl)
+
+all_toe = trans_angulo(all_toe)
 
 time_toe_bckup = ruta + f'/time_toes- {params.startDate} - {params.endDate}: {params.cantidad}.txt'
 with open(time_toe_bckup, 'rb') as fl:
