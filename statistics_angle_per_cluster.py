@@ -20,3 +20,4 @@ for i in range(5):
     promedio = np.average(sujeto)
     desv_st = np.std(sujeto)
     estadísticos_per_cluster[f'{i}'] = {'promedio': promedio, 'std': desv_st}
+print('')

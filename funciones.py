@@ -21,7 +21,7 @@ def lowpassfilter(signal, thresh=0.63, wavelet="sym7"):
     return reconstructed_signal, coeff
 
 
-def grafica(signal, ciclo, reconstructed_signal, path, dates):
+def grafica(signal, ciclo, reconstructed_signal, dates):
     fecha = datetime.datetime.strftime(dates[0], '%d-%m-%Y ~ %H:%M:%S')
     plt.close('all')
     fig, ax = plt.subplots(figsize=(12, 8))
@@ -40,7 +40,7 @@ def grafica(signal, ciclo, reconstructed_signal, path, dates):
     ax.grid(b=True, which='minor', color='#999999', alpha=0.4, linestyle='--')
     ax.minorticks_on()
     # plt.show()
-    fig.savefig(f'{path}/Ciclo {ciclo}.png')
+    fig.savefig(f'/media/arielmardones/HS/SensoSAG/flex/Imágenes/Dwt/Ciclo {ciclo}.png')
     return
 
 
@@ -96,7 +96,7 @@ def consulta_acellz(start_date, end_date, cantidad=5000):
     db = MySQLdb.connect("hstech.sinc.cl", "jsanhueza", "Hstech2018.-)", "ssi_mlp_sag2")
     cursor = db.cursor()
     cursor.execute(
-        "SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (3) AND estado_data = 134217727 AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s",
+        "SELECT dataZ , fecha_reg FROM Data_Sensor WHERE id_sensor_data IN (3) AND (estado_data = 134217727 OR estado_data = 134217726) AND fecha_reg BETWEEN %s AND %s ORDER BY fecha_reg ASC LIMIT %s",
         (start_date, end_date, cantidad))
     results = cursor.fetchall()
     db.close()
@@ -127,9 +127,10 @@ def residuos(t, rec_signal, amplitud, frecuencia, desfase, desplazamiento_y):
 def robust_fitting(signal):
     # Opciones optimización robusta:
     # [linear, huber, soft_l1, cauchy, arctan]
-    x0 = [1, 1 / 280, 0, -0.5]
-    t = np.linspace(0, len(signal), 540)
-    res_robust = least_squares(error_seno, x0, loss='soft_l1', f_scale=0.1, args=(t, signal), bounds=([0.5, 1 / 530, -3.5, -1], [1., 1 / 220, 3.5, 1]))
+    n = len(signal)
+    x0 = [1, 1 / (n * 0.52), 0, -0.5]
+    t = np.linspace(0, n, n)
+    res_robust = least_squares(error_seno, x0, loss='soft_l1', f_scale=0.1, args=(t, signal), bounds=([0.5, 1 / (0.96 * n), -3.5, -1], [1., 1 / (0.41 * n), 3.5, 1]))
     return res_robust
 
 
@@ -172,7 +173,7 @@ def plot_ajuste(señal_rec, seno2, inicio, fin, raw_impacts_, toe_time, toe, i):
     plt.axvline(x=toe_time, color='NAVY')
     ax.set_xlim([0, 540])
     plt.show()
-    fig.savefig(f'/media/arielmardones/HS/SensoSAG/ImágenesToe/Ciclo {i}.png')
+    fig.savefig(f'/media/arielmardones/HS/SensoSAG/flex/Imágenes/Toe/Ciclo {i}.png')
     plt.close('all')
     return
 
